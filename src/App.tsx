@@ -1,28 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import { TaskType, TodoList } from './TodoList';
+import {TaskType, TodoList} from './TodoList';
+
+export type FilterValuesType = 'all' | 'completed' | 'active'
 
 function App() {
-  const frontendTasks: Array<TaskType> = [
-    { id: 1, title: 'CSS', isDone: true },
-    { id: 1, title: 'HTML', isDone: true },
-    { id: 2, title: 'JS6+/TS', isDone: true },
-    { id: 3, title: 'React', isDone: false },
-  ];
+    const [tasks, setTasks] = useState<Array<TaskType>>([
+        {id: 0, title: 'CSS', isDone: true},
+        {id: 1, title: 'HTML', isDone: true},
+        {id: 2, title: 'JS6+/TS', isDone: true},
+        {id: 3, title: 'React', isDone: false},
+    ]);
+    const [filter, setFilter] = useState<FilterValuesType>('all');
 
-  const purchases: Array<TaskType> = [
-    { id: 4, title: 'Meat', isDone: true },
-    { id: 5, title: 'Fish', isDone: true },
-    { id: 6, title: 'Water', isDone: true },
-  ];
+    const removeTask = (tasks: Array<TaskType>, id: number) => {
+        const filteredTasks = tasks.filter((task) => task.id !== id);
+        setTasks(filteredTasks);
+    }
 
-  return (
-    <div className='App'>
-      <TodoList title='What to learn' tasks={frontendTasks} />
-      <TodoList title='What to buy' tasks={purchases} />
-      {/* <TodoList title='Songs' /> */}
-    </div>
-  );
+    const changeFilter = (value: FilterValuesType) => {
+        setFilter(value);
+    }
+
+    let tasksForTodolist = tasks;
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter((t) => t.isDone)
+    }
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter((t) => !t.isDone)
+    }
+
+    return (
+        <div className='App'>
+            <TodoList
+                title='What to learn'
+                tasks={tasksForTodolist}
+                removeTask={removeTask}
+                changeFilter={changeFilter}
+            />
+        </div>
+    );
 }
 
 export default App;
