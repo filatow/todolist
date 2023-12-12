@@ -1,6 +1,6 @@
 import React from 'react';
 import './TodoList.css';
-import {Button} from "./Button";
+import {Button} from './Button';
 
 export type TaskType = {
     id: number
@@ -8,38 +8,43 @@ export type TaskType = {
     isDone: boolean
 }
 
-type PropsType = {
+export type FilterValuesType = 'all' | 'active' | 'completed'
+
+type TodoListPropsType = {
     title: string
     tasks: Array<TaskType>
+    removeTask: (taskId: number) => void
+    changeTodoListFilter: (filterValue: FilterValuesType) => void
 }
 
-export const TodoList = ({title, tasks}: PropsType) => {
-    const listItems: Array<JSX.Element> = [];
+export const TodoList = ({title, tasks, removeTask, changeTodoListFilter}: TodoListPropsType) => {
+    const listItemElements: Array<JSX.Element> = tasks.map((task) => (
+        <li key={task.id}>
+            <input
+                type="checkbox"
+                defaultChecked={task.isDone}
+            />
+            <span>{task.title}</span>
+            <Button caption={'x'} onClickHandler={() => removeTask(task.id)} />
+        </li>
+    ))
 
-    for (let i = 0; i < tasks.length; i += 1) {
-        const listItem: JSX.Element = (
-            <li>
-                <input type='checkbox' checked={tasks[i].isDone}/>
-                <span>{tasks[i].title}</span>
-            </li>
-        );
-        listItems.push(listItem);
-    }
+    const tasksList: JSX.Element = tasks.length
+        ? <ul> {listItemElements} </ul>
+        : <div> The list is empty </div>
 
     return (
         <div className="todoList">
             <h3>{title}</h3>
             <div>
                 <input/>
-                <Button caption={'+'}/>
+                <Button caption={'+'} />
             </div>
-            <ul>
-                {listItems}
-            </ul>
+            {tasksList}
             <div>
-                <Button caption={'All'}/>
-                <Button caption={'Active'}/>
-                <Button caption={'Completed'}/>
+                <Button caption={'All'} onClickHandler={() => changeTodoListFilter('all')}/>
+                <Button caption={'Active'} onClickHandler={() => changeTodoListFilter('active')}/>
+                <Button caption={'Completed'} onClickHandler={() => changeTodoListFilter('completed')}/>
             </div>
         </div>
     )
