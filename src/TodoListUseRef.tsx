@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import './TodoList.css';
 import {Button} from './Button';
 
@@ -18,13 +18,16 @@ type TodoListPropsType = {
     changeTodoListFilter: (filterValue: FilterValuesType) => void
 }
 
-export const TodoList = (
+export const TodoListUseRef = (
     {
         title,
         tasks,
+        addTask,
         removeTask,
         changeTodoListFilter
     }: TodoListPropsType) => {
+
+    const taskTitleInput = useRef<HTMLInputElement>(null);
 
     const listItemElements: Array<JSX.Element> = tasks.map((task) => (
         <li key={task.id}>
@@ -42,14 +45,18 @@ export const TodoList = (
         : <div> The list is empty </div>
 
     const addTaskHandler = () => {
-
+        if (taskTitleInput.current) {
+            const newTaskTitle = taskTitleInput.current.value;
+            addTask(newTaskTitle);
+            taskTitleInput.current.value = '';
+        }
     }
 
     return (
         <div className="todoList">
             <h3>{title}</h3>
             <div>
-                <input />
+                <input ref={taskTitleInput}/>
                 <Button caption={'+'} onClickHandler={addTaskHandler}/>
             </div>
             {tasksList}
