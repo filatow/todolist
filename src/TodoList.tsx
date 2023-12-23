@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import './TodoList.css';
 import {Button} from './Button';
 
@@ -22,9 +22,12 @@ export const TodoList = (
     {
         title,
         tasks,
+        addTask,
         removeTask,
         changeTodoListFilter
     }: TodoListPropsType) => {
+
+    const [taskTitle, setTaskTitle] = useState('');
 
     const listItemElements: Array<JSX.Element> = tasks.map((task) => (
         <li key={task.id}>
@@ -41,16 +44,35 @@ export const TodoList = (
         ? <ul> {listItemElements} </ul>
         : <div> The list is empty </div>
 
-    const addTaskHandler = () => {
+    const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setTaskTitle(e.currentTarget.value.trimStart())
+    }
 
+    const onClickAddTaskHandler = () => {
+        addTask(taskTitle.trimEnd());
+        setTaskTitle('');
+    }
+
+    const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && taskTitle) {
+            onClickAddTaskHandler()
+        }
     }
 
     return (
         <div className="todoList">
             <h3>{title}</h3>
             <div>
-                <input />
-                <Button caption={'+'} onClickHandler={addTaskHandler}/>
+                <input
+                    value={taskTitle}
+                    onChange={(e) => {onChangeInputHandler(e)}}
+                    onKeyDown={onKeyDownHandler}
+                />
+                <Button
+                    caption={'+'}
+                    onClickHandler={onClickAddTaskHandler}
+                    isDisabled={!taskTitle}
+                />
             </div>
             {tasksList}
             <div>
