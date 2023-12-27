@@ -6,6 +6,7 @@ import {v1} from 'uuid';
 
 function App() {
     const todoListTitle = 'What to learn';
+    // console.log('render / rerender');
 
     const [tasks, setTasks] = useState<Array<TaskType>>([
         {id: v1(), title: 'CSS', isDone: true},
@@ -40,6 +41,12 @@ function App() {
         }
         setTasks([newTask, ...tasks]);
     }
+    const changeTaskStatus = (taskId: string, newIsDoneValue: boolean) => {
+        const nextState: Array<TaskType> = tasks.map(
+            (t) => t.id === taskId ? {...t, isDone: newIsDoneValue} : {...t}
+        )
+        setTasks(nextState);
+    }
 
     const changeTodoListFilter = (filterValue: FilterValuesType) => setFilterValue(filterValue);
 
@@ -50,6 +57,8 @@ function App() {
                 tasks={filteredTasks}
                 addTask={addTask}
                 removeTask={removeTask}
+                changeTaskStatus={changeTaskStatus}
+                filterValue={filterValue}
                 changeTodoListFilter={changeTodoListFilter}
             />
         </div>
