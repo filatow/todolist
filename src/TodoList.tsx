@@ -10,17 +10,20 @@ export type TaskType = {
 }
 
 type PropsType = {
+    id: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (tasks: Array<TaskType>, id: string) => void
+    removeTask: (taskId: string, todolistId: string) => void
     filterValue: FilterValueType
-    changeFilter: (value: FilterValueType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean) => void
+    changeFilter: (value: FilterValueType, todolistId: string) => void
+    addTask: (title: string, todolistId: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
+    removeTodoList: (todoListId: string) => void
 }
 
 export const TodoList = (
     {
+        id,
         title,
         tasks,
         removeTask,
@@ -28,16 +31,17 @@ export const TodoList = (
         changeFilter,
         addTask,
         changeTaskStatus,
+        removeTodoList,
     }: PropsType) => {
 
     const [newTaskTitle, setNewTaskTitle] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
 
     const listItemElements: Array<JSX.Element> = tasks.map((task) => {
-        const onRemoveHandler = () => removeTask(tasks, task.id);
+        const onRemoveHandler = () => removeTask(task.id, id);
         const onChangeHandler = (
             e: ChangeEvent<HTMLInputElement>
-        ) => changeTaskStatus(task.id, e.currentTarget.checked);
+        ) => changeTaskStatus(task.id, e.currentTarget.checked, id);
 
         return (
             <li key={task.id}
@@ -62,7 +66,7 @@ export const TodoList = (
     }
     const onClickAddTaskHandler = () => {
         if (newTaskTitle.trim() !== '') {
-            addTask(newTaskTitle.trimEnd())
+            addTask(newTaskTitle.trimEnd(), id)
             setNewTaskTitle('')
         } else {
             setError('Title is required');
@@ -71,13 +75,16 @@ export const TodoList = (
     const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.ctrlKey && e.code === 'Enter') onClickAddTaskHandler();
     }
-    const onAllClickHandler = () => changeFilter('all')
-    const onActiveClickHandler = () => changeFilter('active')
-    const onCompletedClickHandler = () => changeFilter('completed')
+    const onAllClickHandler = () => changeFilter('all', id)
+    const onActiveClickHandler = () => changeFilter('active', id)
+    const onCompletedClickHandler = () => changeFilter('completed', id)
+    const onRemoveTodoListClickHandler = () => {
+        removeTodoList(id)
+    }
 
     return (
         <div className="todoList">
-            <h3>{title}</h3>
+            <h3>{title} <button onClick={onRemoveTodoListClickHandler}>x</button></h3>
             <div>
                 <input
                     value={newTaskTitle}
