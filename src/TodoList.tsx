@@ -3,6 +3,8 @@ import './TodoList.css'
 import { FilterValueType } from './App'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
+import { Button, Checkbox, IconButton } from '@mui/material'
+import { Delete } from '@mui/icons-material'
 
 export type TaskType = {
 	id: string
@@ -50,9 +52,8 @@ export const TodoList = ({
 		}
 
 		return (
-			<li key={task.id} className={task.isDone ? 'is-done' : ''}>
-				<input
-					type="checkbox"
+			<div key={task.id} className={task.isDone ? 'is-done' : ''}>
+				<Checkbox
 					checked={task.isDone}
 					onChange={onChangeTaskStatusHandler}
 				/>
@@ -60,8 +61,10 @@ export const TodoList = ({
 					title={task.title}
 					onChange={onChangeTaskTitleHandler}
 				/>
-				<button onClick={onRemoveTaskHandler}> x</button>
-			</li>
+				<IconButton size="small" onClick={onRemoveTaskHandler}>
+					<Delete fontSize="inherit" />
+				</IconButton>
+			</div>
 		)
 	})
 
@@ -83,32 +86,41 @@ export const TodoList = ({
 					title={title}
 					onChange={onChangeTodoListTitleHandler}
 				/>
-				<button onClick={onRemoveTodoListClickHandler}>x</button>
+				<IconButton
+					size="medium"
+					onClick={onRemoveTodoListClickHandler}
+				>
+					<Delete fontSize="inherit" />
+				</IconButton>
 			</h3>
 			<AddItemForm addItem={addItem} />
-			<ul>{listItemElements}</ul>
-
+			{listItemElements}
 			<div>
-				<button
-					className={filterValue === 'all' ? 'active-filter' : ''}
+				<Button
 					onClick={onAllClickHandler}
+					variant={filterValue === 'all' ? 'contained' : 'outlined'}
+					color="success"
 				>
 					All
-				</button>
-				<button
-					className={filterValue === 'active' ? 'active-filter' : ''}
+				</Button>
+				<Button
 					onClick={onActiveClickHandler}
+					variant={
+						filterValue === 'active' ? 'contained' : 'outlined'
+					}
+					color="secondary"
 				>
 					Active
-				</button>
-				<button
-					className={
-						filterValue === 'completed' ? 'active-filter' : ''
-					}
+				</Button>
+				<Button
 					onClick={onCompletedClickHandler}
+					variant={
+						filterValue === 'completed' ? 'contained' : 'outlined'
+					}
+					color="info"
 				>
 					Completed
-				</button>
+				</Button>
 			</div>
 		</div>
 	)
