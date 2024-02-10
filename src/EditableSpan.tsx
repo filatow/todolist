@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
+import { TextField } from '@mui/material'
 
 type EditableSpanProps = {
 	caption: string
@@ -12,7 +13,9 @@ export const EditableSpan = (props: EditableSpanProps) => {
 	const onBlurInputHandler = () => setEdit(false)
 
 	return edit ?
-			<input
+			<TextField
+				size={'small'}
+				variant={'standard'}
 				onChange={props.onChange}
 				onBlur={onBlurInputHandler}
 				value={props.caption}

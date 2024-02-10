@@ -3,6 +3,17 @@ import './App.css'
 import { FilterValues, Task, TodoList } from './TodoList'
 import { v1 } from 'uuid'
 import { AddItemForm } from './AddItemForm'
+import {
+	AppBar,
+	Container,
+	Grid,
+	IconButton,
+	Paper,
+	Toolbar,
+	Typography,
+} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import Button from '@mui/material/Button'
 
 type TodoListType = { id: string; title: string; filter: FilterValues }
 type FilterMappingType = {
@@ -135,27 +146,48 @@ function App() {
 		const filteredTasks = getFilteredTasks(tl.id, tl.filter)
 
 		return (
-			<TodoList
-				key={tl.id}
-				todoListID={tl.id}
-				title={tl.title}
-				tasks={filteredTasks}
-				addTask={addTask}
-				changeTaskTitle={changeTaskTitle}
-				removeTask={removeTask}
-				changeTaskStatus={changeTaskStatus}
-				filterValue={tl.filter}
-				changeFilter={changeFilter}
-				changeTodoListTitle={changeTodoListTitle}
-				removeTodoList={removeTodoList}
-			/>
+			<Grid item key={tl.id}>
+				<Paper elevation={2} style={{ padding: '15px' }}>
+					<TodoList
+						todoListID={tl.id}
+						title={tl.title}
+						tasks={filteredTasks}
+						addTask={addTask}
+						changeTaskTitle={changeTaskTitle}
+						removeTask={removeTask}
+						changeTaskStatus={changeTaskStatus}
+						filterValue={tl.filter}
+						changeFilter={changeFilter}
+						changeTodoListTitle={changeTodoListTitle}
+						removeTodoList={removeTodoList}
+					/>
+				</Paper>
+			</Grid>
 		)
 	})
 
 	return (
 		<div className="App">
-			<AddItemForm addItem={addTodoList} />
-			{todoListsElements}
+			<AppBar position="static">
+				<Toolbar>
+					<IconButton
+						edge="start"
+						color="inherit"
+					>
+						<MenuIcon />
+					</IconButton>
+					<Typography variant="h6">TodoList</Typography>
+					<Button color="inherit">Login</Button>
+				</Toolbar>
+			</AppBar>
+			<Container fixed>
+				<Grid container style={{padding: '20px 15px'}}>
+					<AddItemForm addItem={addTodoList} />
+				</Grid>
+				<Grid container spacing={3}>
+					{todoListsElements}
+				</Grid>
+			</Container>
 		</div>
 	)
 }

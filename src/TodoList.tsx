@@ -1,8 +1,12 @@
 import React, { ChangeEvent } from 'react'
 import './TodoList.css'
-import { Button } from './Button'
+// import { Button } from './Button'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
+import {Checkbox, IconButton} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Button from '@mui/material/Button';
+
 
 export type Task = {
 	id: string
@@ -45,11 +49,13 @@ export const TodoList = (props: TodoListProps) => {
 				e.currentTarget.value,
 			)
 		}
+		const onClickRemoveTaskHandler = () =>
+			props.removeTask(props.todoListID, task.id)
 
 		return (
-			<li key={task.id} className={task.isDone ? 'task_done' : 'task'}>
-				<input
-					type="checkbox"
+			<div key={task.id} className={task.isDone ? 'task_done' : 'task'}>
+				<Checkbox
+					color={'primary'}
 					checked={task.isDone}
 					onChange={onChangeTaskStatusHandler}
 				/>
@@ -57,19 +63,16 @@ export const TodoList = (props: TodoListProps) => {
 					onChange={onChangeTaskTitleHandler}
 					caption={task.title}
 				/>
-				<Button
-					caption={'x'}
-					onClickHandler={() =>
-						props.removeTask(props.todoListID, task.id)
-					}
-				/>
-			</li>
+				<IconButton size={'small'} onClick={onClickRemoveTaskHandler}>
+					<DeleteIcon />
+				</IconButton>
+			</div>
 		)
 	})
 
 	const tasksList: JSX.Element =
 		props.tasks.length ?
-			<ul> {listItemElements} </ul>
+			<div> {listItemElements} </div>
 		:	<div> The list is empty </div>
 
 	const onAddTaskHandler = (taskTitle: string) =>
@@ -82,6 +85,15 @@ export const TodoList = (props: TodoListProps) => {
 		props.changeTodoListTitle(props.todoListID, e.currentTarget.value)
 	}
 
+	const onClickAllHandler = () =>
+		props.changeFilter(props.todoListID, 'all')
+
+	const onClickActiveHandler = () =>
+		props.changeFilter(props.todoListID, 'active')
+
+	const onClickCompletedHandler = () =>
+		props.changeFilter(props.todoListID, 'completed')
+
 	return (
 		<div className="todoList">
 			<h3>
@@ -89,36 +101,28 @@ export const TodoList = (props: TodoListProps) => {
 					caption={props.title}
 					onChange={onChangeTodoListTitleHandler}
 				/>
-				<button onClick={onClickRemoveTodoListHandler}>x</button>
+				<IconButton onClick={onClickRemoveTodoListHandler}>
+					<DeleteIcon />
+				</IconButton>
 			</h3>
 			<AddItemForm addItem={onAddTaskHandler} />
 			{tasksList}
 			<div>
 				<Button
-					caption={'All'}
-					onClickHandler={() =>
-						props.changeFilter(props.todoListID, 'all')
-					}
-					classes={props.filterValue === 'all' ? 'button_active' : ''}
-				/>
+					onClick={onClickAllHandler}
+					variant={props.filterValue === 'all' ? 'contained' : 'outlined'}
+					color={'inherit'}
+				>All</Button>
 				<Button
-					caption={'Active'}
-					onClickHandler={() =>
-						props.changeFilter(props.todoListID, 'active')
-					}
-					classes={
-						props.filterValue === 'active' ? 'button_active' : ''
-					}
-				/>
+					onClick={onClickActiveHandler}
+					variant={props.filterValue === 'active' ? 'contained' : 'outlined'}
+					color={'primary'}
+				>Active</Button>
 				<Button
-					caption={'Completed'}
-					onClickHandler={() =>
-						props.changeFilter(props.todoListID, 'completed')
-					}
-					classes={
-						props.filterValue === 'completed' ? 'button_active' : ''
-					}
-				/>
+					onClick={onClickCompletedHandler}
+					variant={props.filterValue === 'completed' ? 'contained' : 'outlined'}
+					color={'secondary'}
+				>Completed</Button>
 			</div>
 		</div>
 	)
