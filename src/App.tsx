@@ -1,22 +1,15 @@
 import React, { useState } from 'react'
 import './App.css'
-import { FilterValues, Task, TodoList } from './TodoList'
+import { FilterValues, Task, TodoList as TL } from './TodoList'
 import { v1 } from 'uuid'
 import { AddItemForm } from './AddItemForm'
-import {
-	AppBar,
-	Container,
-	Grid,
-	IconButton,
-	Paper,
-	Toolbar,
-	Typography,
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import { AppHeader } from './AppHeader'
 
-type TodoListType = { id: string; title: string; filter: FilterValues }
-type FilterMappingType = {
+type TodoList = { id: string; title: string; filter: FilterValues }
+type FilterMapping = {
 	active: () => Array<Task>
 	completed: () => Array<Task>
 	all: () => Array<Task>
@@ -26,7 +19,7 @@ function App() {
 	const todoListID1 = v1()
 	const todoListID2 = v1()
 
-	const [todoLists, setTodoLists] = useState<Array<TodoListType>>([
+	const [todoLists, setTodoLists] = useState<Array<TodoList>>([
 		{ id: todoListID1, title: 'What to learn', filter: 'all' },
 		{ id: todoListID2, title: 'What to buy', filter: 'all' },
 	])
@@ -105,7 +98,7 @@ function App() {
 
 	const addTodoList = (title: string) => {
 		const newTodoListID = v1()
-		const newTodoList: TodoListType = {
+		const newTodoList: TodoList = {
 			id: newTodoListID,
 			title,
 			filter: 'all',
@@ -136,7 +129,7 @@ function App() {
 			todoListID: string,
 			filterValue: FilterValues,
 		): Array<Task> => {
-			const filterMapping: FilterMappingType = {
+			const filterMapping: FilterMapping = {
 				active: () => allTasks[todoListID].filter((t) => !t.isDone),
 				completed: () => allTasks[todoListID].filter((t) => t.isDone),
 				all: () => allTasks[todoListID],
@@ -148,7 +141,7 @@ function App() {
 		return (
 			<Grid item key={tl.id}>
 				<Paper elevation={2} style={{ padding: '15px' }}>
-					<TodoList
+					<TL
 						todoListID={tl.id}
 						title={tl.title}
 						tasks={filteredTasks}
@@ -168,20 +161,9 @@ function App() {
 
 	return (
 		<div className="App">
-			<AppBar position="static">
-				<Toolbar>
-					<IconButton
-						edge="start"
-						color="inherit"
-					>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant="h6">TodoList</Typography>
-					<Button color="inherit">Login</Button>
-				</Toolbar>
-			</AppBar>
+			<AppHeader />
 			<Container fixed>
-				<Grid container style={{padding: '20px 15px'}}>
+				<Grid container sx={{ p: '20px 15px' }}>
 					<AddItemForm addItem={addTodoList} />
 				</Grid>
 				<Grid container spacing={3}>

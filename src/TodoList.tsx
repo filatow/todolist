@@ -1,9 +1,9 @@
 import React, { ChangeEvent } from 'react'
 import './TodoList.css'
-// import { Button } from './Button'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
-import {Checkbox, IconButton} from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button';
 
