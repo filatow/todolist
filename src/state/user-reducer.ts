@@ -4,14 +4,27 @@ type StateType = {
 	name: String
 }
 
-type ActionType = {
-	type: string
-	[key: string]: any
+type IncrementAgeActionType = {
+	type: 'INCREMENT-AGE'
 }
+
+type IncrementChildrenCountActionType = {
+	type: 'INCREMENT-CHILDREN-COUNT'
+}
+
+type ChangeNameActionType = {
+	type: 'CHANGE-NAME'
+	newName: string
+}
+
+type ActionsType =
+	| IncrementAgeActionType
+	| IncrementChildrenCountActionType
+	| ChangeNameActionType
 
 export const userReducer = (
 	state: StateType,
-	action: ActionType,
+	action: ActionsType,
 ): StateType => {
 	switch (action.type) {
 		case 'INCREMENT-AGE':
@@ -31,5 +44,25 @@ export const userReducer = (
 			}
 		default:
 			throw new Error("I don't understand this action type")
+	}
+}
+
+export const changeNameActionCreator = (newName: string): ChangeNameActionType => {
+	return {
+		type: 'CHANGE-NAME',
+		newName
+	}
+}
+
+export const incrementChildrenCountActionCreator = (): IncrementChildrenCountActionType => {
+	return {
+		type: 'INCREMENT-CHILDREN-COUNT'
+	}
+}
+
+
+export const incrementAgeActionCreator = (): IncrementAgeActionType => {
+	return {
+		type: 'INCREMENT-AGE'
 	}
 }
