@@ -8,7 +8,12 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import { AppHeader } from './AppHeader'
 
-type TodoList = { id: string; title: string; filter: FilterValues }
+export type TodoList = {
+	id: string;
+	title: string;
+	filter: FilterValues
+}
+
 type FilterMapping = {
 	active: () => Array<Task>
 	completed: () => Array<Task>
@@ -40,6 +45,8 @@ function App() {
 			{ id: v1(), title: 'GraphQL2', isDone: false },
 		],
 	})
+
+	// task
 
 	const addTask = (todoListID: string, title: string) => {
 		const newTask: Task = {
@@ -86,15 +93,7 @@ function App() {
 		})
 	}
 
-	const changeFilter = (todoListID: string, filterValue: FilterValues) => {
-		setTodoLists(
-			todoLists.map((tl) => {
-				return tl.id === todoListID ?
-						{ ...tl, filter: filterValue }
-					:	tl
-			}),
-		)
-	}
+	// todoList
 
 	const addTodoList = (title: string) => {
 		const newTodoListID = v1()
@@ -118,11 +117,23 @@ function App() {
 		)
 	}
 
+	const changeTodoListFilter = (todoListID: string, filterValue: FilterValues) => {
+		setTodoLists(
+			todoLists.map((tl) => {
+				return tl.id === todoListID ?
+					{ ...tl, filter: filterValue }
+					: tl
+			}),
+		)
+	}
+
 	const removeTodoList = (todoListID: string) => {
 		setTodoLists(todoLists.filter((tl) => tl.id !== todoListID))
 		delete allTasks[todoListID]
 		setAllTasks({ ...allTasks })
 	}
+
+	// generate jsx
 
 	const todoListsElements = todoLists.map((tl) => {
 		const getFilteredTasks = (
@@ -150,7 +161,7 @@ function App() {
 						removeTask={removeTask}
 						changeTaskStatus={changeTaskStatus}
 						filterValue={tl.filter}
-						changeFilter={changeFilter}
+						changeFilter={changeTodoListFilter}
 						changeTodoListTitle={changeTodoListTitle}
 						removeTodoList={removeTodoList}
 					/>
@@ -160,7 +171,7 @@ function App() {
 	})
 
 	return (
-		<div className="App">
+		<div className='App'>
 			<AppHeader />
 			<Container fixed>
 				<Grid container sx={{ p: '20px 15px' }}>
