@@ -38,19 +38,19 @@ export const TodoList = (props: TodoListProps) => {
 	const listItemElements: Array<JSX.Element> = props.tasks.map((task) => {
 		const onChangeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) =>
 			props.changeTaskStatus(
-				props.todoListID,
+				props.todoListId,
 				task.id,
 				e.currentTarget.checked,
 			)
 		const onChangeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
 			props.changeTaskTitle(
-				props.todoListID,
+				props.todoListId,
 				task.id,
 				e.currentTarget.value,
 			)
 		}
 		const onClickRemoveTaskHandler = () =>
-			props.removeTask(props.todoListID, task.id)
+			props.removeTask(props.todoListId, task.id)
 
 		return (
 			<div key={task.id} className={task.isDone ? 'task_done' : 'task'}>
@@ -76,23 +76,23 @@ export const TodoList = (props: TodoListProps) => {
 		:	<div> The list is empty </div>
 
 	const onAddTaskHandler = (taskTitle: string) =>
-		props.addTask(props.todoListID, taskTitle)
+		props.addTask(props.todoListId, taskTitle)
 
 	const onClickRemoveTodoListHandler = () =>
-		props.removeTodoList(props.todoListID)
+		props.removeTodoList(props.todoListId)
 
 	const onChangeTodoListTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-		props.changeTodoListTitle(props.todoListID, e.currentTarget.value)
+		props.changeTodoListTitle(props.todoListId, e.currentTarget.value)
 	}
 
 	const onClickAllHandler = () =>
-		props.changeFilter(props.todoListID, 'all')
+		props.changeFilter(props.todoListId, 'all')
 
 	const onClickActiveHandler = () =>
-		props.changeFilter(props.todoListID, 'active')
+		props.changeFilter(props.todoListId, 'active')
 
 	const onClickCompletedHandler = () =>
-		props.changeFilter(props.todoListID, 'completed')
+		props.changeFilter(props.todoListId, 'completed')
 
 	return (
 		<div className="todoList">

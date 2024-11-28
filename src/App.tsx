@@ -14,6 +14,10 @@ export type TodoList = {
 	filter: FilterValues
 }
 
+export type TasksState = {
+	[key: string]: Array<Task>
+}
+
 type FilterMapping = {
 	active: () => Array<Task>
 	completed: () => Array<Task>
