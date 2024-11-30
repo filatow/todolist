@@ -5,7 +5,7 @@ import {
 	removeTaskAC,
 	tasksReducer,
 } from './tasks-reducer'
-import { TasksState } from '../App'
+import { TasksState } from '../app/App'
 import { addTodoListAC, removeTodoListAC } from './todolists-reducer'
 
 let startState: TasksState
@@ -28,7 +28,7 @@ beforeEach(() => {
 test('correct task should be deleted from correct array', () => {
 
 	const endState = tasksReducer(startState, removeTaskAC({
-		todolistId: 'todolistId2',
+		todoListId: 'todolistId2',
 		taskId: '2',
 	}))
 
@@ -49,7 +49,7 @@ test('correct task should be added to correct array', () => {
 
 	const endState = tasksReducer(startState, addTaskAC({
 		title: 'juice',
-		todolistId: 'todolistId2',
+		todoListId: 'todolistId2',
 	}))
 
 	expect(endState['todolistId1'].length).toBe(3)
@@ -64,7 +64,7 @@ test('status of specified task should be changed', () => {
 	const endState = tasksReducer(
 		startState,
 		changeTaskStatusAC({
-			todolistId: 'todolistId2',
+			todoListId: 'todolistId2',
 			taskId: '2',
 			isDone: false,
 		}),
@@ -80,7 +80,7 @@ test('title of specified task should be changed', () => {
 	const endState = tasksReducer(
 		startState,
 		changeTaskTitleAC({
-			todolistId: 'todolistId2',
+			todoListId: 'todolistId2',
 			taskId: '1',
 			title: newTitle,
 		}),

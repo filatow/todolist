@@ -17,7 +17,7 @@ export type Task = {
 export type FilterValues = 'all' | 'active' | 'completed'
 
 type TodoListProps = {
-	todoListID: string
+	todoListId: string
 	title: string
 	tasks: Array<Task>
 	changeTaskStatus: (

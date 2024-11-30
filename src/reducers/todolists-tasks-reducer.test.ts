@@ -1,4 +1,4 @@
-import { TasksState, TodoList } from '../App'
+import { TasksState, TodoList } from '../app/App'
 import { addTodoListAC, todoListsReducer } from './todolists-reducer'
 import { tasksReducer } from './tasks-reducer'
 

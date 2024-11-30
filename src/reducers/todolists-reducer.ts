@@ -1,5 +1,5 @@
-import { TodoList } from '../App'
-import { FilterValues } from '../TodoList'
+import type { TodoList } from '../app/App'
+import type { FilterValues } from '../TodoList'
 import { v1 } from 'uuid'
 
 
@@ -46,34 +46,42 @@ export const changeTodoListFilterAC = (
 }
 
 
+export const todoListID1 = v1()
+export const todoListID2 = v1()
+const initialState: Array<TodoList> = []
+// [
+// 	{ id: todoListID1, title: 'What to learn', filter: 'all' },
+// 	{ id: todoListID2, title: 'What to buy', filter: 'all' },
+// ]
+
 export const todoListsReducer = (
-	todoLists: TodoList[],
+	state: Array<TodoList> = initialState,
 	action: Action,
 ): TodoList[] => {
 	switch (action.type) {
 		case 'REMOVE_TODOLIST':
-			return todoLists.filter((tl) => tl.id !== action.payload.todoListId)
+			return state.filter((tl) => tl.id !== action.payload.todoListId)
 		case 'ADD_TODOLIST':
 			const newTodoList: TodoList = {
 				id: action.payload.todoListId,
 				title: action.payload.title,
 				filter: 'all',
 			}
-			return [...todoLists, newTodoList]
+			return [...state, newTodoList]
 		case 'CHANGE_TODOLIST_TITLE':
-			return todoLists.map((tl) =>
+			return state.map((tl) =>
 				tl.id === action.payload.todoListId
 					? { ...tl, title: action.payload.title }
 					: tl,
 			)
 		case 'CHANGE_TODOLIST_FILTER':
-			return todoLists.map((tl) => {
+			return state.map((tl) => {
 				return tl.id === action.payload.todoListId ?
 					{ ...tl, filter: action.payload.filterValue }
 					: tl
 			})
 		default:
-			throw new Error('Unknown action.type')
+			return state
 	}
 }
 
