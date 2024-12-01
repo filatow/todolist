@@ -1,19 +1,15 @@
-import React, { ChangeEvent } from 'react'
+import React, { useCallback } from 'react'
 import './TodoList.css'
 import { FilterValueType } from './App'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
-import { Button, Checkbox, IconButton } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
-import {useDispatch, useSelector} from 'react-redux';
-import {AppRootState} from './state/store';
-import {
-	addTaskActionCreator,
-	changeTaskStatusActionCreator,
-	changeTaskTitleActionCreator,
-	removeTaskActionCreator
-} from './state/tasks-reducer';
-import {v1} from 'uuid';
+import { useDispatch, useSelector } from 'react-redux'
+import { AppRootState } from './state/store'
+import { addTaskActionCreator } from './state/tasks-reducer'
+import { v1 } from 'uuid'
+import { Task } from './Task'
 
 export type TaskType = {
 	id: string
@@ -30,118 +26,111 @@ type PropsType = {
 	renameTotoList: (todoListId: string, newTitle: string) => void
 }
 
-export const TodoListWithRedux = ({
-	id,
-	title,
-	filterValue,
-	changeFilter,
-	removeTodoList,
-	renameTotoList,
-}: PropsType) => {
-	const tasks = useSelector<AppRootState, TaskType[]>(state => {
-		let tasksToShow = state.tasks[id]
+export const TodoListWithRedux = React.memo(
+	({
+		id,
+		title,
+		filterValue,
+		changeFilter,
+		removeTodoList,
+		renameTotoList,
+	}: PropsType) => {
+		console.log('TodoListWithRedux')
+		const tasks = useSelector<AppRootState, TaskType[]>(
+			(state) => state.tasks[id],
+		)
+		const dispatch = useDispatch()
+
+		let tasksToShow = tasks
 		if (filterValue === 'active') {
-			tasksToShow = tasksToShow.filter(
-				(t) => !t.isDone,
-			)
+			tasksToShow = tasksToShow.filter((t) => !t.isDone)
 		}
 		if (filterValue === 'completed') {
-			tasksToShow = tasksToShow.filter(
-				(t) => t.isDone,
-			)
+			tasksToShow = tasksToShow.filter((t) => t.isDone)
 		}
-		return tasksToShow
-	})
-	const dispatch = useDispatch()
 
-	const listItemElements: Array<JSX.Element> = tasks.map((task) => {
-		const onRemoveTaskHandler = () => {
-			const action = removeTaskActionCreator(id, task.id)
-			dispatch(action)
-		}
-		const onChangeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-			const action = changeTaskStatusActionCreator(id, task.id, e.currentTarget.checked)
-			dispatch(action)
-		}
-		const onChangeTaskTitleHandler = (newValue: string) => {
-			const action = changeTaskTitleActionCreator(id, task.id, newValue)
-			dispatch(action)
-		}
+		const addTask = useCallback(
+			(title: string) => {
+				const action = addTaskActionCreator(id, v1(), title)
+				dispatch(action)
+			},
+			[dispatch, id],
+		)
+
+		const onAllClickHandler = useCallback(
+			() => changeFilter(id, 'all'),
+			[changeFilter, id],
+		)
+		const onActiveClickHandler = useCallback(
+			() => changeFilter(id, 'active'),
+			[changeFilter, id],
+		)
+		const onCompletedClickHandler = useCallback(
+			() => changeFilter(id, 'completed'),
+			[changeFilter, id],
+		)
+
+		const onRemoveTodoListClickHandler = useCallback(
+			() => removeTodoList(id),
+			[removeTodoList, id],
+		)
+		const onChangeTodoListTitleHandler = useCallback(
+			(newTitle: string) => {
+				renameTotoList(id, newTitle)
+			},
+			[renameTotoList, id],
+		)
 
 		return (
-			<div key={task.id} className={task.isDone ? 'is-done' : ''}>
-				<Checkbox
-					checked={task.isDone}
-					onChange={onChangeTaskStatusHandler}
-				/>
-				<EditableSpan
-					title={task.title}
-					onChange={onChangeTaskTitleHandler}
-				/>
-				<IconButton size="small" onClick={onRemoveTaskHandler}>
-					<Delete fontSize="inherit" />
-				</IconButton>
+			<div className="todoList">
+				<h3>
+					<EditableSpan
+						title={title}
+						onChange={onChangeTodoListTitleHandler}
+					/>
+					<IconButton
+						size="medium"
+						onClick={onRemoveTodoListClickHandler}
+					>
+						<Delete fontSize="inherit" />
+					</IconButton>
+				</h3>
+				<AddItemForm addItem={addTask} />
+				{tasksToShow.map((task) => (
+					<Task key={task.id} todoListId={id} task={task} />
+				))}
+				<div>
+					<Button
+						onClick={onAllClickHandler}
+						variant={
+							filterValue === 'all' ? 'contained' : 'outlined'
+						}
+						color="success"
+					>
+						All
+					</Button>
+					<Button
+						onClick={onActiveClickHandler}
+						variant={
+							filterValue === 'active' ? 'contained' : 'outlined'
+						}
+						color="secondary"
+					>
+						Active
+					</Button>
+					<Button
+						onClick={onCompletedClickHandler}
+						variant={
+							filterValue === 'completed' ? 'contained' : (
+								'outlined'
+							)
+						}
+						color="info"
+					>
+						Completed
+					</Button>
+				</div>
 			</div>
 		)
-	})
-
-	const addTask = (title: string) => {
-		const action = addTaskActionCreator(id, v1(), title)
-		dispatch(action)
-	}
-
-	const onAllClickHandler = () => changeFilter(id, 'all')
-	const onActiveClickHandler = () => changeFilter(id, 'active')
-	const onCompletedClickHandler = () => changeFilter(id, 'completed')
-
-	const onRemoveTodoListClickHandler = () => removeTodoList(id)
-	const onChangeTodoListTitleHandler = (newTitle: string) => {
-		renameTotoList(id, newTitle)
-	}
-
-	return (
-		<div className="todoList">
-			<h3>
-				<EditableSpan
-					title={title}
-					onChange={onChangeTodoListTitleHandler}
-				/>
-				<IconButton
-					size="medium"
-					onClick={onRemoveTodoListClickHandler}
-				>
-					<Delete fontSize="inherit" />
-				</IconButton>
-			</h3>
-			<AddItemForm addItem={addTask} />
-			{listItemElements}
-			<div>
-				<Button
-					onClick={onAllClickHandler}
-					variant={filterValue === 'all' ? 'contained' : 'outlined'}
-					color="success"
-				>
-					All
-				</Button>
-				<Button
-					onClick={onActiveClickHandler}
-					variant={
-						filterValue === 'active' ? 'contained' : 'outlined'
-					}
-					color="secondary"
-				>
-					Active
-				</Button>
-				<Button
-					onClick={onCompletedClickHandler}
-					variant={
-						filterValue === 'completed' ? 'contained' : 'outlined'
-					}
-					color="info"
-				>
-					Completed
-				</Button>
-			</div>
-		</div>
-	)
-}
+	},
+)
