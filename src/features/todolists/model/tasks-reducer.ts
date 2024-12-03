@@ -1,5 +1,4 @@
-import { TasksState } from '../app/App'
-import { Task } from '../TodoList'
+import { Task } from '../ui/TodoLists/TodoList/TodoList'
 import { v1 } from 'uuid'
 import { AddTodoListAction, RemoveTodoListAction } from './todolists-reducer'
 
@@ -78,6 +77,11 @@ export const tasksReducer = (state: TasksState = initialState, action: ActionsTy
 		default:
 			return state
 	}
+}
+
+
+export type TasksState = {
+	[key: string]: Array<Task>
 }
 
 // Actions types
