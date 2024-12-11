@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React from 'react'
 import { EditableSpan } from '../../../../../../common/components/EditableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -13,11 +13,11 @@ type TodoListTitleProps = {
 const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 	const dispatch = useAppDispatch()
 
-	const onChangeTodoListTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
+	const onChangeTodoListTitleHandler = (title: string) => {
 		dispatch(
 			changeTodoListTitleAC({
 				todoListId: todoList.id,
-				title: e.currentTarget.value,
+				title,
 			}),
 		)
 	}

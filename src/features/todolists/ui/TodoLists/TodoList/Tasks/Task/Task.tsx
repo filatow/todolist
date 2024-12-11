@@ -26,13 +26,13 @@ const Task = ({ todoList, task }: TaskProps) => {
 				}),
 		)
 	}
-	const onChangeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
+	const onChangeTaskTitleHandler = (title: string) => {
 		dispatch(
 			changeTaskTitleAC(
 				{
 					todoListId: todoList.id,
 					taskId: task.id,
-					title: e.currentTarget.value,
+					title,
 				},
 			),
 		)
