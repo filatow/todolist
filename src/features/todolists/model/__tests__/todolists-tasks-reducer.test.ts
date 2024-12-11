@@ -5,7 +5,7 @@ test('ids should be equals', () => {
 	const startTasksState: TasksState = {}
 	const startTodoListsState: TodoList[] = []
 
-	const action = addTodoListAC({title: 'new todolist'})
+	const action = addTodoListAC({ title: 'new todolist' })
 
 	const endTasksState = tasksReducer(startTasksState, action)
 	const endTodoListsState = todoListsReducer(startTodoListsState, action)

@@ -6,8 +6,8 @@ export function getTheme(themeMode: ThemeMode) {
 		palette: {
 			mode: themeMode === 'light' ? 'light' : 'dark',
 			primary: {
-				main: '#087EA4',
-			},
-		},
+				main: '#087EA4'
+			}
+		}
 	})
 }

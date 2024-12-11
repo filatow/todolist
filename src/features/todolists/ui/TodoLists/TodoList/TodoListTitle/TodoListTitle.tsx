@@ -1,9 +1,13 @@
 import React from 'react'
-import { EditableSpan } from '../../../../../../common/components/EditableSpan/EditableSpan'
+import { EditableSpan } from 'common/components'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { changeTodoListTitleAC, removeTodoListAC, TodoList } from '../../../../model/todolists-reducer'
-import { useAppDispatch } from '../../../../../../common/hooks/useAppDispatch'
+import {
+	changeTodoListTitleAC,
+	removeTodoListAC,
+	TodoList
+} from '../../../../model/todolists-reducer'
+import { useAppDispatch } from 'common/hooks/useAppDispatch'
 
 type TodoListTitleProps = {
 	todoList: TodoList
@@ -17,8 +21,8 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 		dispatch(
 			changeTodoListTitleAC({
 				todoListId: todoList.id,
-				title,
-			}),
+				title
+			})
 		)
 	}
 
@@ -28,10 +32,7 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 
 	return (
 		<h3>
-			<EditableSpan
-				caption={title}
-				onChange={onChangeTodoListTitleHandler}
-			/>
+			<EditableSpan caption={title} onChange={onChangeTodoListTitleHandler} />
 			<IconButton onClick={onClickRemoveTodoListHandler}>
 				<DeleteIcon />
 			</IconButton>

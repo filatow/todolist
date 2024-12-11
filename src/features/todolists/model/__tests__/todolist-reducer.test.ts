@@ -5,7 +5,7 @@ import {
 	changeTodoListFilterAC,
 	changeTodoListTitleAC,
 	removeTodoListAC,
-	todoListsReducer,
+	todoListsReducer
 } from '../todolists-reducer'
 import { FilterValuesType } from '../../ui/TodoLists/TodoList/TodoList'
 
@@ -19,57 +19,43 @@ beforeEach(() => {
 
 	startState = [
 		{ id: todolistId1, title: 'What to learn', filter: 'all' },
-		{ id: todolistId2, title: 'What to buy', filter: 'all' },
+		{ id: todolistId2, title: 'What to buy', filter: 'all' }
 	]
 })
 
 test('correct todolist should be removed', () => {
-
-	const endState = todoListsReducer(
-		startState,
-		removeTodoListAC({ todoListId: todolistId1 }),
-	)
+	const endState = todoListsReducer(startState, removeTodoListAC({ todoListId: todolistId1 }))
 
 	expect(endState.length).toBe(1)
 	expect(endState[0].id).toBe(todolistId2)
 })
 
-
 test('correct todolist should be added', () => {
 	const newTodoListTitle = 'New TodoList'
 
-	const endState = todoListsReducer(
-		startState,
-		addTodoListAC({ title: newTodoListTitle }),
-	)
+	const endState = todoListsReducer(startState, addTodoListAC({ title: newTodoListTitle }))
 
 	expect(endState.length).toBe(3)
 	expect(endState[2].title).toBe(newTodoListTitle)
 	expect(endState[2].filter).toBe('all')
 })
 
-
 test('correct todolist should change its name', () => {
 	const newTodoListTitle = 'New TodoList Title'
 
 	const endState = todoListsReducer(
 		startState,
-		changeTodoListTitleAC(
-			{ todoListId: todolistId2, title: newTodoListTitle },
-		),
+		changeTodoListTitleAC({ todoListId: todolistId2, title: newTodoListTitle })
 	)
 
 	expect(endState[0].title).toBe('What to learn')
 	expect(endState[1].title).toBe(newTodoListTitle)
 })
 
-
 test('correct filter of todolist should be changed', () => {
 	const newFilter: FilterValuesType = 'completed'
 
-	const action = changeTodoListFilterAC(
-		{ todoListId: todolistId2, filterValue: newFilter }
-	)
+	const action = changeTodoListFilterAC({ todoListId: todolistId2, filterValue: newFilter })
 
 	const endState = todoListsReducer(startState, action)
 

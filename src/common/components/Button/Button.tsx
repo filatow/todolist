@@ -9,11 +9,7 @@ type ButtonProps = {
 
 export const Button = (props: ButtonProps) => {
 	return (
-		<button
-			className={props.classes}
-			onClick={props.onClickHandler}
-			disabled={props.isDisabled}
-		>
+		<button className={props.classes} onClick={props.onClickHandler} disabled={props.isDisabled}>
 			{props.caption}
 		</button>
 	)
