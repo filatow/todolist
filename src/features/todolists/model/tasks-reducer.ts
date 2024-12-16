@@ -1,7 +1,8 @@
 import { AddTodoListAction, RemoveTodoListAction } from './todolists-reducer'
-import { AppDispatch } from '../../../app/store'
+import { FullAction } from '../../../app/store'
 import { tasksApi } from '../api/tasksApi'
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from '../api/tasksApi.types'
+import { Dispatch } from 'redux'
 
 // Action creators
 export const setTasksAC = (payload: { todolistId: string; tasks: DomainTask[] }) => {
@@ -23,7 +24,7 @@ export const updateTaskAC = (payload: { updatedTask: DomainTask }) => {
 	return { type: 'UPDATE_TASK', payload } as const
 }
 
-export const fetchTasksTC = (todoListId: string) => (dispatch: AppDispatch) => {
+export const fetchTasksTC = (todoListId: string) => (dispatch: Dispatch<FullAction>) => {
 	tasksApi.getTasks(todoListId)
 		.then(res => {
 			const tasks = res.data.items
@@ -32,7 +33,7 @@ export const fetchTasksTC = (todoListId: string) => (dispatch: AppDispatch) => {
 }
 
 export const removeTaskTC =
-	(args: { taskId: string; todoListId: string }) => (dispatch: AppDispatch) => {
+	(args: { taskId: string; todoListId: string }) => (dispatch: Dispatch<FullAction>) => {
 		tasksApi.removeTask(args)
 			.then(_res => {
 				dispatch(removeTaskAC(args))
@@ -40,7 +41,7 @@ export const removeTaskTC =
 	}
 
 export const createTaskTC =
-	(args: { todoListId: string, title: string }) => (dispatch: AppDispatch) => {
+	(args: { todoListId: string, title: string }) => (dispatch: Dispatch<FullAction>) => {
 		tasksApi.createTask(args)
 			.then(res => {
 				const task = res.data.data.item
@@ -50,7 +51,7 @@ export const createTaskTC =
 
 export const updateTaskTC =
 	(args: { task: DomainTask, domainModel: UpdateTaskDomainModel }) =>
-		(dispatch: AppDispatch) => {
+		(dispatch: Dispatch<FullAction>) => {
 			const { task, domainModel } = args
 			const {
 				todoListId,
@@ -76,7 +77,7 @@ export const updateTaskTC =
 
 const initialState: TasksState = {}
 
-export const tasksReducer = (state: TasksState = initialState, action: ActionsType): TasksState => {
+export const tasksReducer = (state: TasksState = initialState, action: FullAction): TasksState => {
 	switch (action.type) {
 		case 'SET_TASKS': {
 			const stateCopy = { ...state }
@@ -129,7 +130,7 @@ export type RemoveTaskAction = ReturnType<typeof removeTaskAC>
 export type AddTaskAction = ReturnType<typeof createTaskAC>
 export type UpdateTaskAction = ReturnType<typeof updateTaskAC>
 
-type ActionsType =
+export type TasksAction =
 	| SetTaskAction
 	| RemoveTaskAction
 	| AddTaskAction
