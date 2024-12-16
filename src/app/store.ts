@@ -7,7 +7,7 @@ import {
 import { TasksAction, tasksReducer } from '../features/todolists/model/tasks-reducer'
 import { TodoListsAction, todoListsReducer } from '../features/todolists/model/todolists-reducer'
 import { AppAction, appReducer } from './app-reducer'
-import { thunk, ThunkDispatch } from 'redux-thunk'
+import { thunk, ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
@@ -21,11 +21,15 @@ export const store = createStore(rootReducer, {}, applyMiddleware(thunk))
 
 // определить автоматически тип всего объекта состояния
 export type RootState = ReturnType<typeof store.getState>
+
 // export type AppDispatch = typeof store.dispatch
 export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>
 
-// типы экшенов для всего App
+// типы action для всего приложения
 export type FullAction = AppAction | TodoListsAction | TasksAction
+
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, FullAction>
+
 
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore

@@ -1,7 +1,7 @@
 import type { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
 import { DomainTodoList, TodoList } from '../api/todolistsApi.types'
 import { todolistsApi } from '../api/todolistsApi'
-import { FullAction } from '../../../app/store'
+import { AppThunk, FullAction } from '../../../app/store'
 import { Dispatch } from 'redux'
 
 export const setTodoListsAC = (payload: { todoLists: TodoList[] }) => {
@@ -39,23 +39,25 @@ export const changeTodoListFilterAC = (payload: {
 	} as const
 }
 
-export const fetchTodoListsTC = () => (dispatch: Dispatch<FullAction>) => {
-	todolistsApi.getTodoLists()
-		.then((res) => {
-			dispatch(setTodoListsAC({ todoLists: res.data }))
-		})
-}
+export const fetchTodoListsTC = (): AppThunk =>
+	(dispatch: Dispatch<FullAction>) => {
+		todolistsApi.getTodoLists()
+			.then((res) => {
+				dispatch(setTodoListsAC({ todoLists: res.data }))
+			})
+	}
 
-export const createTodoListTC = (args: { title: string }) => (dispatch: Dispatch<FullAction>) => {
-	const { title } = args
-	todolistsApi.createTodoList(title)
-		.then((res) => {
-			const todoList: TodoList = res.data.data.item
-			dispatch(createTodoListAC({ todoList }))
-		})
-}
+export const createTodoListTC = (args: { title: string }): AppThunk =>
+	(dispatch: Dispatch<FullAction>) => {
+		const { title } = args
+		todolistsApi.createTodoList(title)
+			.then((res) => {
+				const todoList: TodoList = res.data.data.item
+				dispatch(createTodoListAC({ todoList }))
+			})
+	}
 
-export const updateTodoListTC = (args: { todoListId: string, title: string }) =>
+export const updateTodoListTC = (args: { todoListId: string, title: string }): AppThunk =>
 	(dispatch: Dispatch<FullAction>) => {
 		const { todoListId, title } = args
 		todolistsApi.updateTodoList({ todoListId, title })
@@ -64,7 +66,7 @@ export const updateTodoListTC = (args: { todoListId: string, title: string }) =>
 			})
 	}
 
-export const removeTodoListTC = (args: { todoListId: string }) =>
+export const removeTodoListTC = (args: { todoListId: string }): AppThunk =>
 	(dispatch: Dispatch<FullAction>) => {
 		const { todoListId } = args
 		todolistsApi.removeTodolist(todoListId)

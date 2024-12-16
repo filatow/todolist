@@ -1,5 +1,5 @@
 import { AddTodoListAction, RemoveTodoListAction } from './todolists-reducer'
-import { FullAction } from '../../../app/store'
+import { AppThunk, FullAction } from '../../../app/store'
 import { tasksApi } from '../api/tasksApi'
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from '../api/tasksApi.types'
 import { Dispatch } from 'redux'
@@ -24,33 +24,36 @@ export const updateTaskAC = (payload: { updatedTask: DomainTask }) => {
 	return { type: 'UPDATE_TASK', payload } as const
 }
 
-export const fetchTasksTC = (todoListId: string) => (dispatch: Dispatch<FullAction>) => {
-	tasksApi.getTasks(todoListId)
-		.then(res => {
-			const tasks = res.data.items
-			dispatch(setTasksAC({ todolistId: todoListId, tasks }))
-		})
-}
+export const fetchTasksTC = (todoListId: string): AppThunk =>
+	(dispatch: Dispatch<FullAction>) => {
+		tasksApi.getTasks(todoListId)
+			.then(res => {
+				const tasks = res.data.items
+				dispatch(setTasksAC({ todolistId: todoListId, tasks }))
+			})
+	}
 
 export const removeTaskTC =
-	(args: { taskId: string; todoListId: string }) => (dispatch: Dispatch<FullAction>) => {
-		tasksApi.removeTask(args)
-			.then(_res => {
-				dispatch(removeTaskAC(args))
-			})
-	}
+	(args: { taskId: string; todoListId: string }): AppThunk =>
+		(dispatch: Dispatch<FullAction>) => {
+			tasksApi.removeTask(args)
+				.then(_res => {
+					dispatch(removeTaskAC(args))
+				})
+		}
 
 export const createTaskTC =
-	(args: { todoListId: string, title: string }) => (dispatch: Dispatch<FullAction>) => {
-		tasksApi.createTask(args)
-			.then(res => {
-				const task = res.data.data.item
-				dispatch(createTaskAC({ task }))
-			})
-	}
+	(args: { todoListId: string, title: string }): AppThunk =>
+		(dispatch: Dispatch<FullAction>) => {
+			tasksApi.createTask(args)
+				.then(res => {
+					const task = res.data.data.item
+					dispatch(createTaskAC({ task }))
+				})
+		}
 
 export const updateTaskTC =
-	(args: { task: DomainTask, domainModel: UpdateTaskDomainModel }) =>
+	(args: { task: DomainTask, domainModel: UpdateTaskDomainModel }): AppThunk =>
 		(dispatch: Dispatch<FullAction>) => {
 			const { task, domainModel } = args
 			const {
