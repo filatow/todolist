@@ -2,15 +2,12 @@ import React from 'react'
 import { EditableSpan } from 'common/components'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {
-	changeTodoListTitleAC,
-	removeTodoListAC,
-	TodoList
-} from '../../../../model/todolists-reducer'
+import { removeTodoListTC, updateTodoListTC } from '../../../../model/todolists-reducer'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
+import { DomainTodoList } from '../../../../api/todolistsApi.types'
 
 type TodoListTitleProps = {
-	todoList: TodoList
+	todoList: DomainTodoList
 	title: string
 }
 
@@ -19,7 +16,7 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 
 	const onChangeTodoListTitleHandler = (title: string) => {
 		dispatch(
-			changeTodoListTitleAC({
+			updateTodoListTC({
 				todoListId: todoList.id,
 				title
 			})
@@ -27,7 +24,7 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 	}
 
 	const onClickRemoveTodoListHandler = () => {
-		dispatch(removeTodoListAC({ todoListId: todoList.id }))
+		dispatch(removeTodoListTC({ todoListId: todoList.id }))
 	}
 
 	return (

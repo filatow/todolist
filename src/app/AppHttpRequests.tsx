@@ -3,7 +3,11 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { AddItemForm, EditableSpan } from 'common/components'
 import axios from 'axios'
 import { TodoList } from '../features/todolists/api/todolistsApi.types'
-import { GetTasksResponse, Task, UpdateTaskModel } from '../features/todolists/api/tasksApi.types'
+import {
+	DomainTask,
+	GetTasksResponse,
+	UpdateTaskModel
+} from '../features/todolists/api/tasksApi.types'
 import { todolistsApi } from '../features/todolists/api/todolistsApi'
 import { tasksApi } from '../features/todolists/api/tasksApi'
 import { TaskStatus } from '../features/todolists/lib/enums/enums'
@@ -12,7 +16,7 @@ const BASE = 'https://social-network.samuraijs.com/api/1.1'
 const AUTH_KEY = 'cd13ea51-66fe-4e3a-a845-db8c050e4e87'
 
 type TasksState = {
-	[key: string]: Task[]
+	[key: string]: DomainTask[]
 }
 
 export const AppHttpRequests = () => {
@@ -61,31 +65,31 @@ export const AppHttpRequests = () => {
 		})
 	}
 
-	const createTaskHandler = (args: { title: string; todolistId: string }) => {
-		const { todolistId } = args
+	const createTaskHandler = (args: { title: string; todoListId: string }) => {
+		const { todoListId } = args
 		tasksApi.createTask(args).then((res) => {
 			const newTask = res.data.data.item
 			setTasks((tasks) => ({
 				...tasks,
-				[todolistId]: [newTask, ...(tasks[todolistId] || [])]
+				[todoListId]: [newTask, ...(tasks[todoListId] || [])]
 			}))
 		})
 	}
 
-	const removeTaskHandler = (args: { taskId: string; todolistId: string }) => {
-		const { taskId, todolistId } = args
+	const removeTaskHandler = (args: { taskId: string; todoListId: string }) => {
+		const { taskId, todoListId } = args
 		tasksApi.removeTask(args).then((res) => {
 			if (res.status === 200)
 				setTasks((tasks) => ({
 					...tasks,
-					[todolistId]: tasks[todolistId].filter((t: Task) => t.id !== taskId)
+					[todoListId]: tasks[todoListId].filter((t: DomainTask) => t.id !== taskId)
 				}))
 		})
 	}
 
-	const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>, task: Task) => {
+	const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>, task: DomainTask) => {
 		const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
-		const statusUpdateData: UpdateTaskModel = {
+		const updateTaskData: UpdateTaskModel = {
 			title: task.title,
 			status,
 			deadline: task.deadline,
@@ -93,7 +97,11 @@ export const AppHttpRequests = () => {
 			priority: task.priority,
 			startDate: task.startDate
 		}
-		tasksApi.updateTask(statusUpdateData, task).then((res) => {
+		tasksApi.updateTask({
+			updateTaskData,
+			todoListId: task.todoListId,
+			taskId: task.id
+		}).then((res) => {
 			if (res.status === 200) {
 				const updatedTask = res.data.data.item
 				setTasks((tasks) => ({
@@ -104,8 +112,8 @@ export const AppHttpRequests = () => {
 		})
 	}
 
-	const changeTaskTitleHandler = (title: string, task: Task) => {
-		const titleUpdateData: UpdateTaskModel = {
+	const changeTaskTitleHandler = (title: string, task: DomainTask) => {
+		const updateTaskData: UpdateTaskModel = {
 			title,
 			status: task.status,
 			deadline: task.deadline,
@@ -114,7 +122,11 @@ export const AppHttpRequests = () => {
 			startDate: task.startDate
 		}
 
-		tasksApi.updateTask(titleUpdateData, task).then((res) => {
+		tasksApi.updateTask({
+			updateTaskData,
+			todoListId: task.todoListId,
+			taskId: task.id
+		}).then((res) => {
 			if (res.status === 200) {
 				const updatedTask = res.data.data.item
 				setTasks((tasks) => ({
@@ -140,11 +152,11 @@ export const AppHttpRequests = () => {
 							/>
 							<button onClick={() => removeTodolistHandler(tl.id)}>x</button>
 						</div>
-						<AddItemForm addItem={(title) => createTaskHandler({ title, todolistId: tl.id })} />
+						<AddItemForm addItem={(title) => createTaskHandler({ title, todoListId: tl.id })} />
 
 						{/* Tasks */}
 						{!!tasks[tl.id] &&
-							tasks[tl.id].map((task: Task) => {
+							tasks[tl.id].map((task: DomainTask) => {
 								return (
 									<div key={task.id}>
 										<Checkbox
@@ -156,7 +168,7 @@ export const AppHttpRequests = () => {
 											onChange={(title) => changeTaskTitleHandler(title, task)}
 										/>
 										<button
-											onClick={() => removeTaskHandler({ todolistId: tl.id, taskId: task.id })}
+											onClick={() => removeTaskHandler({ todoListId: tl.id, taskId: task.id })}
 										>
 											x
 										</button>

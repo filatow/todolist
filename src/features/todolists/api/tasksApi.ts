@@ -1,27 +1,31 @@
-import { Task, UpdateTaskModel } from './tasksApi.types'
+import { DomainTask, UpdateTaskModel } from './tasksApi.types'
 import { instance } from 'common/instance/instance'
 import { BaseResponse } from 'common/types/types'
 
 export const tasksApi = {
-	createTask(args: { todolistId: string; title: string }) {
-		const { todolistId, title } = args
-		return instance.post<BaseResponse<{ item: Task }>>(
-			`todo-lists/${todolistId}/tasks`,
+	getTasks(todolistId: string) {
+		return instance.get(`todo-lists/${todolistId}/tasks`)
+	},
+	createTask(args: { todoListId: string; title: string }) {
+		const { todoListId, title } = args
+		return instance.post<BaseResponse<{ item: DomainTask }>>(
+			`todo-lists/${todoListId}/tasks`,
 			{ title },
 			{
-				params: { todolistId }
+				params: { todoListId }
 			}
 		)
 	},
-	removeTask(args: { todolistId: string; taskId: string }) {
-		const { todolistId, taskId } = args
-		return instance.delete<BaseResponse>(`todo-lists/${todolistId}/tasks/${taskId}`, {
-			params: { todolistId, taskId }
+	removeTask(args: { todoListId: string; taskId: string }) {
+		const { todoListId, taskId } = args
+		return instance.delete<BaseResponse>(`todo-lists/${todoListId}/tasks/${taskId}`, {
+			params: { todoListId, taskId }
 		})
 	},
-	updateTask(updateTaskData: UpdateTaskModel, task: Task) {
-		return instance.put<BaseResponse<{ item: Task }>>(
-			`todo-lists/${task.todoListId}/tasks/${task.id}`,
+	updateTask(args: { updateTaskData: UpdateTaskModel, todoListId: string, taskId: string }) {
+		const { updateTaskData, todoListId, taskId } = args
+		return instance.put<BaseResponse<{ item: DomainTask }>>(
+			`todo-lists/${todoListId}/tasks/${taskId}`,
 			updateTaskData
 		)
 	}

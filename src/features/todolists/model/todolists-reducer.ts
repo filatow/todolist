@@ -1,5 +1,11 @@
 import type { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
-import { v1 } from 'uuid'
+import { DomainTodoList, TodoList } from '../api/todolistsApi.types'
+import { todolistsApi } from '../api/todolistsApi'
+import { AppDispatch } from '../../../app/store'
+
+export const setTodoListsAC = (payload: { todoLists: TodoList[] }) => {
+	return { type: 'SET_TODOLISTS', payload } as const
+}
 
 export const removeTodoListAC = (payload: { todoListId: string }) => {
 	return {
@@ -8,14 +14,14 @@ export const removeTodoListAC = (payload: { todoListId: string }) => {
 	} as const
 }
 
-export const addTodoListAC = (payload: { title: string }) => {
+export const createTodoListAC = (payload: { todoList: TodoList }) => {
 	return {
 		type: 'ADD_TODOLIST',
-		payload: { ...payload, todoListId: v1() }
+		payload
 	} as const
 }
 
-export const changeTodoListTitleAC = (payload: { todoListId: string; title: string }) => {
+export const updateTodoListAC = (payload: { todoListId: string; title: string }) => {
 	return {
 		type: 'CHANGE_TODOLIST_TITLE',
 		payload
@@ -32,21 +38,55 @@ export const changeTodoListFilterAC = (payload: {
 	} as const
 }
 
-const initialState: Array<TodoList> = []
+export const fetchTodoListsTC = () => (dispatch: AppDispatch) => {
+	todolistsApi.getTodoLists()
+		.then((res) => {
+			dispatch(setTodoListsAC({ todoLists: res.data }))
+		})
+}
+
+export const createTodoListTC = (args: { title: string }) => (dispatch: AppDispatch) => {
+	const { title } = args
+	todolistsApi.createTodoList(title)
+		.then((res) => {
+			const todoList: TodoList = res.data.data.item
+			dispatch(createTodoListAC({ todoList }))
+		})
+}
+
+export const updateTodoListTC = (args: { todoListId: string, title: string }) => (dispatch: AppDispatch) => {
+	const { todoListId, title } = args
+	todolistsApi.updateTodoList({todoListId, title})
+		.then((_res) => {
+			dispatch(updateTodoListAC({ todoListId, title }))
+		})
+}
+
+export const removeTodoListTC = (args: { todoListId: string }) => (dispatch: AppDispatch) => {
+	const { todoListId } = args
+	todolistsApi.removeTodolist(todoListId)
+		.then((_res) => {
+			dispatch(removeTodoListAC({ todoListId }))
+		})
+}
+
+const initialState: Array<DomainTodoList> = []
 export const todoListsReducer = (
-	state: Array<TodoList> = initialState,
+	state: Array<DomainTodoList> = initialState,
 	action: Action
-): TodoList[] => {
+): DomainTodoList[] => {
 	switch (action.type) {
+		case 'SET_TODOLISTS': {
+			return action.payload.todoLists.map(tl => ({ ...tl, filter: 'all' }))
+		}
 		case 'REMOVE_TODOLIST':
 			return state.filter((tl) => tl.id !== action.payload.todoListId)
 		case 'ADD_TODOLIST':
-			const newTodoList: TodoList = {
-				id: action.payload.todoListId,
-				title: action.payload.title,
+			const newTodoList: DomainTodoList = {
+				...action.payload.todoList,
 				filter: 'all'
 			}
-			return [...state, newTodoList]
+			return [newTodoList, ...state]
 		case 'CHANGE_TODOLIST_TITLE':
 			return state.map((tl) =>
 				tl.id === action.payload.todoListId ? { ...tl, title: action.payload.title } : tl
@@ -54,26 +94,23 @@ export const todoListsReducer = (
 		case 'CHANGE_TODOLIST_FILTER':
 			return state.map((tl) => {
 				return tl.id === action.payload.todoListId ?
-						{ ...tl, filter: action.payload.filterValue }
-					:	tl
+					{ ...tl, filter: action.payload.filterValue }
+					: tl
 			})
 		default:
 			return state
 	}
 }
 
-export type TodoList = {
-	id: string
-	title: string
-	filter: FilterValuesType
-}
 
-export type AddTodoListAction = ReturnType<typeof addTodoListAC>
-export type ChangeTodoListTitleAction = ReturnType<typeof changeTodoListTitleAC>
+export type SetTodoListsAction = ReturnType<typeof setTodoListsAC>
+export type AddTodoListAction = ReturnType<typeof createTodoListAC>
+export type ChangeTodoListTitleAction = ReturnType<typeof updateTodoListAC>
 export type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilterAC>
 export type RemoveTodoListAction = ReturnType<typeof removeTodoListAC>
 
 type Action =
+	| SetTodoListsAction
 	| AddTodoListAction
 	| RemoveTodoListAction
 	| ChangeTodoListTitleAction

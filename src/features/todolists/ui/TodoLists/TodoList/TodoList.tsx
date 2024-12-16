@@ -2,17 +2,16 @@ import React from 'react'
 import { AddItemForm } from 'common/components'
 import TodoListTitle from './TodoListTitle/TodoListTitle'
 import Tasks from './Tasks/Tasks'
-import { addTaskAC } from '../../../model/tasks-reducer'
-import { TodoList as TodoListType } from '../../../model/todolists-reducer'
+import { createTaskTC } from '../../../model/tasks-reducer'
 import FilterTasksButtons from './FilterTasksButtons/FilterTasksButtons'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
+import { DomainTodoList } from '../../../api/todolistsApi.types'
 
 export const TodoList = ({ todoList }: TodoListProps) => {
-	console.log('TodoList')
 	const dispatch = useAppDispatch()
 
 	const onAddTaskHandler = (taskTitle: string) => {
-		dispatch(addTaskAC({ todoListId: todoList.id, title: taskTitle }))
+		dispatch(createTaskTC({ todoListId: todoList.id, title: taskTitle }))
 	}
 
 	return (
@@ -28,5 +27,5 @@ export const TodoList = ({ todoList }: TodoListProps) => {
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
 type TodoListProps = {
-	todoList: TodoListType
+	todoList: DomainTodoList
 }

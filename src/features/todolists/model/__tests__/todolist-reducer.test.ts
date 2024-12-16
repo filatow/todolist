@@ -1,25 +1,25 @@
 import { v1 } from 'uuid'
-import { TodoList } from '../todolists-reducer'
 import {
-	addTodoListAC,
 	changeTodoListFilterAC,
-	changeTodoListTitleAC,
+	createTodoListAC,
 	removeTodoListAC,
-	todoListsReducer
+	todoListsReducer,
+	updateTodoListAC
 } from '../todolists-reducer'
 import { FilterValuesType } from '../../ui/TodoLists/TodoList/TodoList'
+import { DomainTodoList } from '../../api/todolistsApi.types'
 
 let todolistId1: string
 let todolistId2: string
-let startState: Array<TodoList>
+let startState: Array<DomainTodoList>
 
 beforeEach(() => {
 	todolistId1 = v1()
 	todolistId2 = v1()
 
 	startState = [
-		{ id: todolistId1, title: 'What to learn', filter: 'all' },
-		{ id: todolistId2, title: 'What to buy', filter: 'all' }
+		{ id: todolistId1, title: 'What to learn', filter: 'all', order: 10, addedDate: '' },
+		{ id: todolistId2, title: 'What to buy', filter: 'all', order: 10, addedDate: '' }
 	]
 })
 
@@ -33,11 +33,18 @@ test('correct todolist should be removed', () => {
 test('correct todolist should be added', () => {
 	const newTodoListTitle = 'New TodoList'
 
-	const endState = todoListsReducer(startState, addTodoListAC({ title: newTodoListTitle }))
+	const endState = todoListsReducer(startState, createTodoListAC({
+		todoList: {
+			addedDate: '2024-12-15T23:47:43.1138498Z',
+			id: 'd3e45f35-faf2-446e-b55c-d632f446a52e',
+			order: -6,
+			title: newTodoListTitle
+		}
+	}))
 
 	expect(endState.length).toBe(3)
-	expect(endState[2].title).toBe(newTodoListTitle)
-	expect(endState[2].filter).toBe('all')
+	expect(endState[0].title).toBe(newTodoListTitle)
+	expect(endState[0].filter).toBe('all')
 })
 
 test('correct todolist should change its name', () => {
@@ -45,7 +52,7 @@ test('correct todolist should change its name', () => {
 
 	const endState = todoListsReducer(
 		startState,
-		changeTodoListTitleAC({ todoListId: todolistId2, title: newTodoListTitle })
+		updateTodoListAC({ todoListId: todolistId2, title: newTodoListTitle })
 	)
 
 	expect(endState[0].title).toBe('What to learn')

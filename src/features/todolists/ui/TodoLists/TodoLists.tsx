@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TodoList } from './TodoList/TodoList'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import { useAppSelector } from 'common/hooks/useAppSelector'
 import { selectTodoLists } from '../../model/todoListsSelectors'
+import { fetchTodoListsTC } from '../../model/todolists-reducer'
+import { useAppDispatch } from 'common/hooks/useAppDispatch'
 
 const TodoLists = () => {
+	const dispatch = useAppDispatch()
 	const todoLists = useAppSelector(selectTodoLists)
+	useEffect(() => {
+		dispatch(fetchTodoListsTC())
+	}, [])
 
 	return (
 		<>
