@@ -78,7 +78,7 @@ export const removeTodoListTC = (args: { todoListId: string }): AppThunk =>
 const initialState: Array<DomainTodoList> = []
 export const todoListsReducer = (
 	state: Array<DomainTodoList> = initialState,
-	action: FullAction
+	action: TodoListsAction
 ): DomainTodoList[] => {
 	switch (action.type) {
 		case 'SET_TODOLISTS': {

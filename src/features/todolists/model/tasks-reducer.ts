@@ -80,7 +80,7 @@ export const updateTaskTC =
 
 const initialState: TasksState = {}
 
-export const tasksReducer = (state: TasksState = initialState, action: FullAction): TasksState => {
+export const tasksReducer = (state: TasksState = initialState, action: TasksAction): TasksState => {
 	switch (action.type) {
 		case 'SET_TASKS': {
 			const stateCopy = { ...state }
