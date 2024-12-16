@@ -47,6 +47,12 @@ export const fetchTodoListsTC = (): AppThunk =>
 			})
 	}
 
+export const _fetchTodoListsTC = (): AppThunk =>
+	async (dispatch: Dispatch<FullAction>) => {
+		const res = await todolistsApi.getTodoLists()
+		dispatch(setTodoListsAC({ todoLists: res.data }))
+	}
+
 export const createTodoListTC = (args: { title: string }): AppThunk =>
 	(dispatch: Dispatch<FullAction>) => {
 		const { title } = args
