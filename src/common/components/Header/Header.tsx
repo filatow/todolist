@@ -4,16 +4,19 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import { MenuButton } from 'common/components'
-import { Switch, useTheme } from '@mui/material'
+import LinearProgress from '@mui/material/LinearProgress'
+import Switch from '@mui/material/Switch'
+import { useTheme } from '@mui/material'
 import { switchThemeAC } from '../../../app/app-reducer'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { selectTheme } from '../../../app/appSelectors'
+import { selectAppStatus, selectTheme } from '../../../app/appSelectors'
 
 export function Header() {
 	const dispatch = useAppDispatch()
 	const themeMode = useAppSelector(selectTheme)
 	const theme = useTheme()
+	const status = useAppSelector(selectAppStatus)
 
 	const switchMode = () => {
 		dispatch(switchThemeAC(themeMode === 'light' ? 'dark' : 'light'))
@@ -32,6 +35,7 @@ export function Header() {
 					<Switch color={'default'} onChange={switchMode} />
 				</div>
 			</Toolbar>
+			{status === 'loading' && <LinearProgress />}
 		</AppBar>
 	)
 }

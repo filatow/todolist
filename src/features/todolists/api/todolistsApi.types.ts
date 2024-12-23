@@ -1,4 +1,5 @@
 import { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
+import { RequestStatus } from '../../../app/app-reducer'
 
 export type TodoList = {
 	id: string
@@ -9,4 +10,5 @@ export type TodoList = {
 
 export type DomainTodoList = TodoList & {
 	filter: FilterValuesType
+	entityStatus: RequestStatus
 }

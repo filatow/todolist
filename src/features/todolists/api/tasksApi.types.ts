@@ -1,12 +1,13 @@
 import { TaskPriority, TaskStatus } from '../lib/enums/enums'
+import { RequestStatus } from '../../../app/app-reducer'
 
 export type GetTasksResponse = {
 	error: string | null
+	items: ServerTask[]
 	totalCount: number
-	items: DomainTask[]
 }
 
-export type DomainTask = {
+export type ServerTask = {
 	title: string
 	description: string | null
 	status: TaskStatus
@@ -17,6 +18,10 @@ export type DomainTask = {
 	id: string
 	order: number
 	todoListId: string
+}
+
+export type DomainTask = ServerTask & {
+	entityStatus: RequestStatus
 }
 
 export type UpdateTaskModel = {

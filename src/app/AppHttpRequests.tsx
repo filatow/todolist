@@ -4,8 +4,8 @@ import { AddItemForm, EditableSpan } from 'common/components'
 import axios from 'axios'
 import { TodoList } from '../features/todolists/api/todolistsApi.types'
 import {
-	DomainTask,
 	GetTasksResponse,
+	ServerTask,
 	UpdateTaskModel
 } from '../features/todolists/api/tasksApi.types'
 import { todolistsApi } from '../features/todolists/api/todolistsApi'
@@ -16,7 +16,7 @@ const BASE = 'https://social-network.samuraijs.com/api/1.1'
 const AUTH_KEY = 'cd13ea51-66fe-4e3a-a845-db8c050e4e87'
 
 type TasksState = {
-	[key: string]: DomainTask[]
+	[key: string]: ServerTask[]
 }
 
 export const AppHttpRequests = () => {
@@ -67,13 +67,18 @@ export const AppHttpRequests = () => {
 
 	const createTaskHandler = (args: { title: string; todoListId: string }) => {
 		const { todoListId } = args
-		tasksApi.createTask(args).then((res) => {
-			const newTask = res.data.data.item
-			setTasks((tasks) => ({
-				...tasks,
-				[todoListId]: [newTask, ...(tasks[todoListId] || [])]
-			}))
-		})
+		tasksApi
+			.createTask(args)
+			.then((res) => {
+				const newTask = res.data.data.item
+				setTasks((tasks) => ({
+					...tasks,
+					[todoListId]: [newTask, ...(tasks[todoListId] || [])]
+				}))
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	const removeTaskHandler = (args: { taskId: string; todoListId: string }) => {
@@ -82,12 +87,12 @@ export const AppHttpRequests = () => {
 			if (res.status === 200)
 				setTasks((tasks) => ({
 					...tasks,
-					[todoListId]: tasks[todoListId].filter((t: DomainTask) => t.id !== taskId)
+					[todoListId]: tasks[todoListId].filter((t: ServerTask) => t.id !== taskId)
 				}))
 		})
 	}
 
-	const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>, task: DomainTask) => {
+	const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>, task: ServerTask) => {
 		const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
 		const updateTaskData: UpdateTaskModel = {
 			title: task.title,
@@ -97,22 +102,26 @@ export const AppHttpRequests = () => {
 			priority: task.priority,
 			startDate: task.startDate
 		}
-		tasksApi.updateTask({
-			updateTaskData,
-			todoListId: task.todoListId,
-			taskId: task.id
-		}).then((res) => {
-			if (res.status === 200) {
-				const updatedTask = res.data.data.item
-				setTasks((tasks) => ({
-					...tasks,
-					[task.todoListId]: tasks[task.todoListId].map((t) => (t.id === task.id ? updatedTask : t))
-				}))
-			}
-		})
+		tasksApi
+			.updateTask({
+				updateTaskData,
+				todoListId: task.todoListId,
+				taskId: task.id
+			})
+			.then((res) => {
+				if (res.status === 200) {
+					const updatedTask = res.data.data.item
+					setTasks((tasks) => ({
+						...tasks,
+						[task.todoListId]: tasks[task.todoListId].map((t) =>
+							t.id === task.id ? updatedTask : t
+						)
+					}))
+				}
+			})
 	}
 
-	const changeTaskTitleHandler = (title: string, task: DomainTask) => {
+	const changeTaskTitleHandler = (title: string, task: ServerTask) => {
 		const updateTaskData: UpdateTaskModel = {
 			title,
 			status: task.status,
@@ -122,19 +131,23 @@ export const AppHttpRequests = () => {
 			startDate: task.startDate
 		}
 
-		tasksApi.updateTask({
-			updateTaskData,
-			todoListId: task.todoListId,
-			taskId: task.id
-		}).then((res) => {
-			if (res.status === 200) {
-				const updatedTask = res.data.data.item
-				setTasks((tasks) => ({
-					...tasks,
-					[task.todoListId]: tasks[task.todoListId].map((t) => (t.id === task.id ? updatedTask : t))
-				}))
-			}
-		})
+		tasksApi
+			.updateTask({
+				updateTaskData,
+				todoListId: task.todoListId,
+				taskId: task.id
+			})
+			.then((res) => {
+				if (res.status === 200) {
+					const updatedTask = res.data.data.item
+					setTasks((tasks) => ({
+						...tasks,
+						[task.todoListId]: tasks[task.todoListId].map((t) =>
+							t.id === task.id ? updatedTask : t
+						)
+					}))
+				}
+			})
 	}
 
 	return (
@@ -156,7 +169,7 @@ export const AppHttpRequests = () => {
 
 						{/* Tasks */}
 						{!!tasks[tl.id] &&
-							tasks[tl.id].map((task: DomainTask) => {
+							tasks[tl.id].map((task: ServerTask) => {
 								return (
 									<div key={task.id}>
 										<Checkbox

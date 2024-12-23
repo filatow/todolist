@@ -5,9 +5,10 @@ import AddBox from '@mui/icons-material/AddBox'
 
 type AddItemFormProps = {
 	addItem: (title: string) => void
+	disabled?: boolean
 }
 
-export const AddItemForm = (props: AddItemFormProps) => {
+export const AddItemForm = ({ addItem, disabled = false }: AddItemFormProps) => {
 	const [itemTitle, setItemTitle] = useState('')
 	const [inputError, setInputError] = useState<string | null>(null)
 
@@ -19,7 +20,7 @@ export const AddItemForm = (props: AddItemFormProps) => {
 	const onClickAddItemHandler = () => {
 		const trimmedItemTitle = itemTitle.trim()
 		if (trimmedItemTitle) {
-			props.addItem(trimmedItemTitle)
+			addItem(trimmedItemTitle)
 		} else {
 			setInputError('Error: title is required')
 		}
@@ -42,12 +43,13 @@ export const AddItemForm = (props: AddItemFormProps) => {
 				onKeyDown={onKeyDownHandler}
 				error={!!inputError}
 				helperText={inputError}
+				disabled={disabled}
 			/>
 			<IconButton
 				size={'medium'}
 				color={'primary'}
 				onClick={onClickAddItemHandler}
-				disabled={!itemTitle}
+				disabled={disabled || !itemTitle}
 			>
 				<AddBox />
 			</IconButton>

@@ -5,16 +5,18 @@ type EditableSpanProps = {
 	caption: string
 	// onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 	onChange: (title: string) => void
+	disabled?: boolean
 }
 
 export const EditableSpan = (props: EditableSpanProps) => {
-	const [value, setValue] = useState(props.caption)
+	const { caption, onChange, disabled = false } = props
+	const [value, setValue] = useState(caption)
 	const [edit, setEdit] = useState(false)
 
 	const onDoubleClickSpanHandler = () => setEdit(true)
 	const onBlurInputHandler = () => setEdit(false)
 	const onChangeHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		props.onChange(e.currentTarget.value)
+		onChange(e.currentTarget.value)
 		setValue(e.currentTarget.value)
 	}
 
@@ -26,6 +28,7 @@ export const EditableSpan = (props: EditableSpanProps) => {
 				onBlur={onBlurInputHandler}
 				value={value}
 				autoFocus
+				disabled={disabled}
 			/>
-		:	<span onDoubleClick={onDoubleClickSpanHandler}>{props.caption}</span>
+		:	<span onDoubleClick={onDoubleClickSpanHandler}>{caption}</span>
 }

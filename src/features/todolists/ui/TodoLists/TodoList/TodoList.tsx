@@ -17,7 +17,7 @@ export const TodoList = ({ todoList }: TodoListProps) => {
 	return (
 		<div className="todoList">
 			<TodoListTitle todoList={todoList} title={todoList.title} />
-			<AddItemForm addItem={onAddTaskHandler} />
+			<AddItemForm addItem={onAddTaskHandler} disabled={todoList.entityStatus === 'loading'} />
 			<Tasks todoList={todoList} />
 			<FilterTasksButtons todoList={todoList} />
 		</div>

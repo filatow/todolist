@@ -1,6 +1,6 @@
 import React from 'react'
 import { ThemeProvider } from '@mui/material/styles'
-import { Header } from 'common/components'
+import { ErrorSnackbar, Header } from 'common/components'
 import { CssBaseline } from '@mui/material'
 import { getTheme } from 'common/theme/theme'
 import Main from './Main'
@@ -17,6 +17,7 @@ function App() {
 			<CssBaseline />
 			<Header />
 			<Main />
+			<ErrorSnackbar />
 		</ThemeProvider>
 	)
 }

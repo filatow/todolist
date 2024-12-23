@@ -29,8 +29,15 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 
 	return (
 		<h3>
-			<EditableSpan caption={title} onChange={onChangeTodoListTitleHandler} />
-			<IconButton onClick={onClickRemoveTodoListHandler}>
+			<EditableSpan
+				caption={title}
+				onChange={onChangeTodoListTitleHandler}
+				disabled={todoList.entityStatus === 'loading'}
+			/>
+			<IconButton
+				onClick={onClickRemoveTodoListHandler}
+				disabled={todoList.entityStatus === 'loading'}
+			>
 				<DeleteIcon />
 			</IconButton>
 		</h3>

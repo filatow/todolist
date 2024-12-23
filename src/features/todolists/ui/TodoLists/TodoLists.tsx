@@ -10,6 +10,7 @@ import { useAppDispatch } from 'common/hooks/useAppDispatch'
 const TodoLists = () => {
 	const dispatch = useAppDispatch()
 	const todoLists = useAppSelector(selectTodoLists)
+
 	useEffect(() => {
 		dispatch(fetchTodoListsTC())
 	}, [])

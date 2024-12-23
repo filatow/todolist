@@ -23,7 +23,8 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: 'task #1',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T18:50:25.503',
@@ -35,7 +36,8 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: 'task #2',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T20:49:24.503',
@@ -47,8 +49,9 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: 'task #3',
-				todoListId: 'todolistId1'
-			},
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
+			}
 		],
 		todolistId2: [
 			{
@@ -61,7 +64,8 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: '001',
-				todoListId: 'todolistId2'
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T15:20:25.503',
@@ -73,7 +77,8 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: '002',
-				todoListId: 'todolistId2'
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T1:32:13.503',
@@ -85,9 +90,10 @@ beforeEach(() => {
 				startDate: null,
 				status: 0,
 				title: '003',
-				todoListId: 'todolistId2'
-			},
-		],
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
+			}
+		]
 	}
 })
 
@@ -137,7 +143,7 @@ test('correct task should be deleted from correct todoList', () => {
 				status: 0,
 				title: 'task #3',
 				todoListId: 'todolistId1'
-			},
+			}
 		],
 		todolistId2: [
 			{
@@ -163,8 +169,8 @@ test('correct task should be deleted from correct todoList', () => {
 				status: 0,
 				title: '002',
 				todoListId: 'todolistId2'
-			},
-		],
+			}
+		]
 	})
 })
 
@@ -182,7 +188,8 @@ test('correct task should be added to correct array', () => {
 				startDate: null,
 				status: 0,
 				title: 'juice',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			}
 		})
 	)
@@ -209,7 +216,8 @@ test('status of specified task should be changed', () => {
 				startDate: null,
 				status: 2,
 				title: 'task #2',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			}
 		})
 	)
@@ -234,7 +242,8 @@ test('title of specified task should be changed', () => {
 				startDate: null,
 				status: 0,
 				title: newTitle,
-				todoListId: 'todolistId2'
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
 			}
 		})
 	)
@@ -244,14 +253,17 @@ test('title of specified task should be changed', () => {
 })
 
 test('new array should be added when new todolist is added', () => {
-	const endState = tasksReducer(startState, createTodoListAC({
-		todoList: {
-			addedDate: '2024-12-15T23:47:43.1138498Z',
-			id: 'd3e45f35-faf2-446e-b55c-d632f446a52e',
-			order: -6,
-			title: 'Brand new Todolist'
-		}
-	}))
+	const endState = tasksReducer(
+		startState,
+		createTodoListAC({
+			todoList: {
+				addedDate: '2024-12-15T23:47:43.1138498Z',
+				id: 'd3e45f35-faf2-446e-b55c-d632f446a52e',
+				order: -6,
+				title: 'Brand new Todolist'
+			}
+		})
+	)
 
 	const keys = Object.keys(endState)
 	const newKey = keys.find((k) => k !== 'todolistId1' && k !== 'todolistId2')
