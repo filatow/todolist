@@ -8,18 +8,24 @@ import LinearProgress from '@mui/material/LinearProgress'
 import Switch from '@mui/material/Switch'
 import { useTheme } from '@mui/material'
 import { switchThemeAC } from '../../../app/app-reducer'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
+import { useAppDispatch, useAppSelector } from '../../hooks'
 import { selectAppStatus, selectTheme } from '../../../app/appSelectors'
+import { selectIsLoggedIn } from '../../../features/auth/model/authSelectors'
+import { logoutTC } from '../../../features/auth/model/auth-reducer'
 
 export function Header() {
 	const dispatch = useAppDispatch()
 	const themeMode = useAppSelector(selectTheme)
 	const theme = useTheme()
 	const status = useAppSelector(selectAppStatus)
+	const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
 	const switchMode = () => {
 		dispatch(switchThemeAC(themeMode === 'light' ? 'dark' : 'light'))
+	}
+
+	const handleLogout = () => {
+		dispatch(logoutTC())
 	}
 
 	return (
@@ -29,8 +35,7 @@ export function Header() {
 					<MenuIcon />
 				</IconButton>
 				<div>
-					<MenuButton>Login</MenuButton>
-					<MenuButton>Logout</MenuButton>
+					{isLoggedIn && <MenuButton onClick={handleLogout}>Logout</MenuButton>}
 					<MenuButton background={theme.palette.primary.dark}>Faq</MenuButton>
 					<Switch color={'default'} onChange={switchMode} />
 				</div>
