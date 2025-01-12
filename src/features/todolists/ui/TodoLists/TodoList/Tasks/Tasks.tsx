@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Task } from './Task'
 import { List } from '@mui/material'
 import { useAppSelector } from 'common/hooks/useAppSelector'
 import { selectTasks } from '../../../../model/tasksSelectors'
-import { useAppDispatch } from 'common/hooks/useAppDispatch'
-import { fetchTasksTC } from '../../../../model/tasks-reducer'
 import { ServerTask } from '../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../lib/enums/enums'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
@@ -15,11 +13,6 @@ type TasksProps = {
 
 const Tasks = ({ todoList }: TasksProps) => {
 	const allTasks = useAppSelector(selectTasks)
-	const dispatch = useAppDispatch()
-
-	useEffect(() => {
-		dispatch(fetchTasksTC(todoList.id))
-	}, [])
 
 	const tasks = allTasks[todoList.id]
 

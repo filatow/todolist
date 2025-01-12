@@ -1,4 +1,4 @@
-import { AddTodoListAction, RemoveTodoListAction } from './todolists-reducer'
+import {AddTodoListAction, ClearTodoListsDataAction, RemoveTodoListAction} from './todolists-reducer'
 import { AppThunk, FullAction } from '../../../app/store'
 import { tasksApi } from '../api/tasksApi'
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from '../api/tasksApi.types'
@@ -187,6 +187,8 @@ export const tasksReducer = (state: TasksState = initialState, action: TasksActi
 			)
 			return stateCopy
 		}
+		case 'CLEAR_DATA':
+			return {}
 		default:
 			return state
 	}
@@ -211,3 +213,4 @@ export type TasksAction =
 	| AddTodoListAction
 	| RemoveTodoListAction
 	| ChangeTaskEntityStatusAction
+	| ClearTodoListsDataAction
