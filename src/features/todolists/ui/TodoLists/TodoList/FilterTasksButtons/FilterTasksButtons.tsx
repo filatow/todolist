@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '@mui/material/Button'
-import { changeTodoListFilterAC } from '../../../../model/todolists-reducer'
+import { changeTodoListFilter } from '../../../../model/todolistsSlice'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
 
@@ -9,7 +9,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 
 	const onClickAllHandler = () => {
 		dispatch(
-			changeTodoListFilterAC({
+			changeTodoListFilter({
 				todoListId: todoList.id,
 				filterValue: 'all'
 			})
@@ -18,7 +18,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 
 	const onClickActiveHandler = () => {
 		dispatch(
-			changeTodoListFilterAC({
+			changeTodoListFilter({
 				todoListId: todoList.id,
 				filterValue: 'active'
 			})
@@ -27,7 +27,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 
 	const onClickCompletedHandler = () => {
 		dispatch(
-			changeTodoListFilterAC({
+			changeTodoListFilter({
 				todoListId: todoList.id,
 				filterValue: 'completed'
 			})

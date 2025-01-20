@@ -2,7 +2,7 @@ import React from 'react'
 import { EditableSpan } from 'common/components'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { removeTodoListTC, updateTodoListTC } from '../../../../model/todolists-reducer'
+import { removeTodoListTC, updateTodoListTC } from '../../../../model/todolistsSlice'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
 
@@ -24,7 +24,7 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 	}
 
 	const onClickRemoveTodoListHandler = () => {
-		dispatch(removeTodoListTC({ todoListId: todoList.id }))
+		dispatch(removeTodoListTC({ id: todoList.id }))
 	}
 
 	return (

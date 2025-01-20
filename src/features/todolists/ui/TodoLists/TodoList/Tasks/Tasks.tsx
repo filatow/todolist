@@ -2,10 +2,9 @@ import React, { useEffect } from 'react'
 import { Task } from './Task'
 import { List } from '@mui/material'
 import { useAppSelector } from 'common/hooks/useAppSelector'
-import { selectTasks } from '../../../../model/tasksSelectors'
+import { fetchTasksTC, selectTasks } from '../../../../model/tasksSlice'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
-import { fetchTasksTC } from '../../../../model/tasks-reducer'
-import { ServerTask } from '../../../../api/tasksApi.types'
+import { DomainTask } from '../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../lib/enums/enums'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
 
@@ -32,7 +31,7 @@ const Tasks = ({ todoList }: TasksProps) => {
 
 	return filteredTasks.length ?
 			<List>
-				{tasks.map((task) => (
+				{filteredTasks.map((task) => (
 					<Task key={task.id} task={task} todoList={todoList} />
 				))}
 			</List>
@@ -42,7 +41,7 @@ const Tasks = ({ todoList }: TasksProps) => {
 export default Tasks
 
 type FilterMapping = {
-	active: () => Array<ServerTask>
-	completed: () => Array<ServerTask>
-	all: () => Array<ServerTask>
+	active: () => Array<DomainTask>
+	completed: () => Array<DomainTask>
+	all: () => Array<DomainTask>
 }

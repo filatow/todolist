@@ -1,11 +1,5 @@
-import {
-	createTaskAC,
-	removeTaskAC,
-	tasksReducer,
-	TasksState,
-	updateTaskAC
-} from '../tasks-reducer'
-import { createTodoListAC, removeTodoListAC } from '../todolists-reducer'
+import { createTask, removeTask, tasksReducer, TasksState, updateTask } from '../tasksSlice'
+import { createTodoList, removeTodoList } from '../todolistsSlice'
 import { TaskStatus } from '../../lib/enums/enums'
 
 let startState: TasksState
@@ -100,7 +94,7 @@ beforeEach(() => {
 test('correct task should be deleted from correct todoList', () => {
 	const endState = tasksReducer(
 		startState,
-		removeTaskAC({
+		removeTask({
 			todoListId: 'todolistId2',
 			taskId: 'fb8233e4-2cf7-4eaf-8f2a-69247f5847dd'
 		})
@@ -118,7 +112,8 @@ test('correct task should be deleted from correct todoList', () => {
 				startDate: null,
 				status: 0,
 				title: 'task #1',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T18:50:25.503',
@@ -130,7 +125,8 @@ test('correct task should be deleted from correct todoList', () => {
 				startDate: null,
 				status: 0,
 				title: 'task #2',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T20:49:24.503',
@@ -142,7 +138,8 @@ test('correct task should be deleted from correct todoList', () => {
 				startDate: null,
 				status: 0,
 				title: 'task #3',
-				todoListId: 'todolistId1'
+				todoListId: 'todolistId1',
+				entityStatus: 'idle'
 			}
 		],
 		todolistId2: [
@@ -156,7 +153,8 @@ test('correct task should be deleted from correct todoList', () => {
 				startDate: null,
 				status: 0,
 				title: '001',
-				todoListId: 'todolistId2'
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
 			},
 			{
 				addedDate: '2024-12-15T15:20:25.503',
@@ -168,7 +166,8 @@ test('correct task should be deleted from correct todoList', () => {
 				startDate: null,
 				status: 0,
 				title: '002',
-				todoListId: 'todolistId2'
+				todoListId: 'todolistId2',
+				entityStatus: 'idle'
 			}
 		]
 	})
@@ -177,7 +176,7 @@ test('correct task should be deleted from correct todoList', () => {
 test('correct task should be added to correct array', () => {
 	const endState = tasksReducer(
 		startState,
-		createTaskAC({
+		createTask({
 			task: {
 				addedDate: '2024-12-15T18:22:37.6611741Z',
 				deadline: null,
@@ -205,7 +204,7 @@ test('correct task should be added to correct array', () => {
 test('status of specified task should be changed', () => {
 	const endState = tasksReducer(
 		startState,
-		updateTaskAC({
+		updateTask({
 			updatedTask: {
 				addedDate: '2024-12-15T18:50:25.503',
 				deadline: null,
@@ -231,7 +230,7 @@ test('title of specified task should be changed', () => {
 
 	const endState = tasksReducer(
 		startState,
-		updateTaskAC({
+		updateTask({
 			updatedTask: {
 				addedDate: '2024-12-15T21:21:24.503',
 				deadline: null,
@@ -255,7 +254,7 @@ test('title of specified task should be changed', () => {
 test('new array should be added when new todolist is added', () => {
 	const endState = tasksReducer(
 		startState,
-		createTodoListAC({
+		createTodoList({
 			todoList: {
 				addedDate: '2024-12-15T23:47:43.1138498Z',
 				id: 'd3e45f35-faf2-446e-b55c-d632f446a52e',
@@ -276,7 +275,7 @@ test('new array should be added when new todolist is added', () => {
 })
 
 test('todolist with the specified todoListId should be deleted', () => {
-	const action = removeTodoListAC({ todoListId: 'todolistId2' })
+	const action = removeTodoList({ id: 'todolistId2' })
 	const endState = tasksReducer(startState, action)
 
 	const keys = Object.keys(endState)

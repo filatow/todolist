@@ -1,20 +1,24 @@
-import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
-import { TasksAction, tasksReducer } from '../features/todolists/model/tasks-reducer'
-import { TodoListsAction, todoListsReducer } from '../features/todolists/model/todolists-reducer'
-import { AppAction, appReducer } from './app-reducer'
-import { thunk, ThunkAction, ThunkDispatch } from 'redux-thunk'
-import { AuthAction, authReducer } from '../features/auth/model/auth-reducer'
+import { TasksAction, tasksReducer, tasksSlice } from '../features/todolists/model/tasksSlice'
+import {
+	TodoListsAction,
+	todoListsSlice,
+	todolistsSlice
+} from '../features/todolists/model/todolistsSlice'
+import { AppAction, appReducer, appSlice } from './appSlice'
+import { ThunkAction } from 'redux-thunk'
+import { AuthAction, authReducer, authSlice } from '../features/auth/model/authSlice'
+import { configureStore } from '@reduxjs/toolkit'
 
-// объединяя reducer-ы с помощью combineReducers,
-// мы задаём структуру нашего единственного объекта-состояния
-const rootReducer = combineReducers({
-	tasks: tasksReducer,
-	todoLists: todoListsReducer,
-	app: appReducer,
-	auth: authReducer
-})
 // непосредственно создаём store
-export const store = createStore(rootReducer, {}, applyMiddleware(thunk))
+// export const store = createStore(rootReducer, {}, applyMiddleware(thunk))
+export const store = configureStore({
+	reducer: {
+		[authSlice.name]: authReducer,
+		[appSlice.name]: appReducer,
+		[todoListsSlice.name]: todolistsSlice,
+		[tasksSlice.name]: tasksReducer
+	}
+})
 
 // определить автоматически тип всего объекта состояния
 export type RootState = ReturnType<typeof store.getState>
@@ -22,8 +26,8 @@ export type RootState = ReturnType<typeof store.getState>
 // типы action для всего приложения
 export type FullAction = AppAction | TodoListsAction | TasksAction | AuthAction
 
-// export type AppDispatch = typeof store.dispatch
-export type AppDispatch = ThunkDispatch<RootState, unknown, FullAction>
+export type AppDispatch = typeof store.dispatch
+// export type AppDispatch = ThunkDispatch<RootState, unknown, FullAction>
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, FullAction>
 

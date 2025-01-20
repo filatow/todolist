@@ -7,11 +7,9 @@ import { MenuButton } from 'common/components'
 import LinearProgress from '@mui/material/LinearProgress'
 import Switch from '@mui/material/Switch'
 import { useTheme } from '@mui/material'
-import { switchThemeAC } from '../../../app/app-reducer'
+import { selectAppStatus, selectTheme, switchTheme } from '../../../app/appSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { selectAppStatus, selectTheme } from '../../../app/appSelectors'
-import { selectIsLoggedIn } from '../../../features/auth/model/authSelectors'
-import { logoutTC } from '../../../features/auth/model/auth-reducer'
+import { logoutTC, selectIsLoggedIn } from '../../../features/auth/model/authSlice'
 
 export function Header() {
 	const dispatch = useAppDispatch()
@@ -21,7 +19,7 @@ export function Header() {
 	const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
 	const switchMode = () => {
-		dispatch(switchThemeAC(themeMode === 'light' ? 'dark' : 'light'))
+		dispatch(switchTheme({ theme: themeMode === 'light' ? 'dark' : 'light' }))
 	}
 
 	const handleLogout = () => {

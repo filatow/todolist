@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react'
-import { removeTaskTC, updateTaskTC } from '../../../../../model/tasks-reducer'
+import { removeTaskTC, updateTaskTC } from '../../../../../model/tasksSlice'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -47,4 +47,5 @@ export const Task = ({ todoList, task }: TaskProps) => {
 type TaskProps = {
 	todoList: DomainTodoList
 	task: DomainTask
+	// task: ServerTask
 }

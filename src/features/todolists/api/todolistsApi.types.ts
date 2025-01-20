@@ -1,5 +1,5 @@
 import { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
-import { RequestStatus } from '../../../app/app-reducer'
+import { RequestStatus } from '../../../app/appSlice'
 
 export type TodoList = {
 	id: string

@@ -4,11 +4,10 @@ import { ErrorSnackbar, Header } from 'common/components'
 import { CircularProgress, CssBaseline } from '@mui/material'
 import { getTheme } from 'common/theme/theme'
 import { useAppSelector } from 'common/hooks/useAppSelector'
-import { selectTheme } from './appSelectors'
+import { selectTheme } from './appSlice'
 import { Routing } from 'common/routing'
 import { useAppDispatch } from 'common/hooks'
-import { initializeAppTC } from '../features/auth/model/auth-reducer'
-import { selectIsInitialized } from '../features/auth/model/authSelectors'
+import { initializeAppTC, selectIsInitialized } from '../features/auth/model/authSlice'
 import s from './App.module.css'
 
 function App() {
