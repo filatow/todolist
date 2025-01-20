@@ -98,7 +98,13 @@ export const Login = () => {
 								type="password"
 								label="Password"
 								margin="normal"
-								{...register('password', { required: 'Password is required' })}
+								{...register('password', {
+									required: 'Password is required',
+									minLength: {
+										value: 3,
+										message: 'Password must be at least 3 characters long'
+									}
+								})}
 							/>
 							{errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
 							<FormControlLabel
