@@ -7,14 +7,25 @@ import { MenuButton } from 'common/components'
 import LinearProgress from '@mui/material/LinearProgress'
 import Switch from '@mui/material/Switch'
 import { useTheme } from '@mui/material'
-import { selectAppStatus, selectTheme, switchTheme } from '../../../app/appSlice'
+import {
+	selectAppStatus,
+	selectTheme,
+	switchTheme,
+	selectIsLoggedIn,
+	setAppStatus,
+	setIsLoggedIn
+} from '../../../app/appSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { logoutTC, selectIsLoggedIn } from '../../../features/auth/model/authSlice'
+import { useLogoutMutation } from '../../../features/auth/api/authApi'
+import { ResultCode } from '../../../features/todolists/lib/enums/enums'
+import { clearTasksAndTodoLists } from 'common/actions/common.actions'
 
 export function Header() {
 	const dispatch = useAppDispatch()
-	const themeMode = useAppSelector(selectTheme)
+	const [logout] = useLogoutMutation()
 	const theme = useTheme()
+
+	const themeMode = useAppSelector(selectTheme)
 	const status = useAppSelector(selectAppStatus)
 	const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
@@ -23,7 +34,14 @@ export function Header() {
 	}
 
 	const handleLogout = () => {
-		dispatch(logoutTC())
+		logout().then((res) => {
+			if (res.data?.resultCode === ResultCode.Success)			{
+				dispatch(setAppStatus({ status: 'succeeded' }))
+				dispatch(setIsLoggedIn({ isLoggedIn: false }))
+				localStorage.removeItem('sn-token')
+				dispatch(clearTasksAndTodoLists({ todoLists: [], tasks: {} }))
+			}
+		})
 	}
 
 	return (

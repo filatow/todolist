@@ -8,28 +8,25 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import { useAppSelector } from 'common/hooks/useAppSelector'
 import { getTheme } from 'common/theme'
-import { selectTheme } from '../../../../app/appSlice'
+import { selectIsLoggedIn, selectTheme, setIsLoggedIn } from '../../../../app/appSlice'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import s from './Login.module.css'
-import { loginTC, selectIsLoggedIn } from '../../model/authSlice'
 import { useAppDispatch } from 'common/hooks'
 import { useNavigate } from 'react-router'
 import { useEffect } from 'react'
 import { Path } from 'common/routing/Routing'
-
-type Inputs = {
-	email: string
-	password: string
-	rememberMe: boolean
-}
+import { LoginArgs } from '../../api/authApi.types'
+import { useLoginMutation } from 'features/auth/api/authApi'
+import { ResultCode } from '../../../todolists/lib/enums/enums'
 
 export const Login = () => {
 	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
+	const [login] = useLoginMutation()
+
 	const isLoggedIn = useAppSelector(selectIsLoggedIn)
 	const themeMode = useAppSelector(selectTheme)
 	const theme = getTheme(themeMode)
-
-	const navigate = useNavigate()
 
 	const {
 		register,
@@ -37,7 +34,7 @@ export const Login = () => {
 		reset,
 		control,
 		formState: { errors }
-	} = useForm<Inputs>({
+	} = useForm<LoginArgs>({
 		defaultValues: {
 			email: 'free@samuraijs.com',
 			password: 'free',
@@ -45,9 +42,17 @@ export const Login = () => {
 		}
 	})
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		dispatch(loginTC(data))
-		// reset()
+	const onSubmit: SubmitHandler<LoginArgs> = (data) => {
+		login(data)
+			.then((res) => {
+				if (res.data?.resultCode === ResultCode.Success) {
+					dispatch(setIsLoggedIn({ isLoggedIn: true }))
+					localStorage.setItem('sn-token', res.data.data.token)
+				}
+			})
+			.finally(() => {
+				reset()
+			})
 	}
 
 	useEffect(() => {

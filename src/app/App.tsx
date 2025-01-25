@@ -1,25 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeProvider } from '@mui/material/styles'
 import { ErrorSnackbar, Header } from 'common/components'
 import { CircularProgress, CssBaseline } from '@mui/material'
 import { getTheme } from 'common/theme/theme'
 import { useAppSelector } from 'common/hooks/useAppSelector'
-import { selectTheme } from './appSlice'
+import { selectTheme, setIsLoggedIn } from './appSlice'
 import { Routing } from 'common/routing'
 import { useAppDispatch } from 'common/hooks'
-import { initializeAppTC, selectIsInitialized } from '../features/auth/model/authSlice'
 import s from './App.module.css'
+import { useMeQuery } from '../features/auth/api/authApi'
+import { ResultCode } from '../features/todolists/lib/enums/enums'
 
 function App() {
 	const dispatch = useAppDispatch()
 	const themeMode = useAppSelector(selectTheme)
-	const isInitialized = useAppSelector(selectIsInitialized)
 
 	const theme = getTheme(themeMode)
+	const [isInitialized, setIsInitialized] = useState(false)
+	const { data, isLoading } = useMeQuery()
 
 	useEffect(() => {
-		dispatch(initializeAppTC())
-	}, [])
+		if (!isLoading) {
+			setIsInitialized(true)
+			if (data?.resultCode === ResultCode.Success) {
+				dispatch(setIsLoggedIn({ isLoggedIn: true }))
+			}
+		}
+	}, [isLoading, data, dispatch])
 
 	if (!isInitialized) {
 		return (

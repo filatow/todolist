@@ -3,7 +3,7 @@ import {
 	changeTodoListFilter,
 	createTodoList,
 	removeTodoList,
-	todolistsSlice,
+	todoListsReducer,
 	updateTodoListTitle
 } from '../todolistsSlice'
 import { FilterValuesType } from '../../ui/TodoLists/TodoList/TodoList'
@@ -38,7 +38,7 @@ beforeEach(() => {
 })
 
 test('correct todolist should be removed', () => {
-	const endState = todolistsSlice(startState, removeTodoList({ todoListId: todolistId1 }))
+	const endState = todoListsReducer(startState, removeTodoList({ todoListId: todolistId1 }))
 
 	expect(endState.length).toBe(1)
 	expect(endState[0].id).toBe(todolistId2)
@@ -47,7 +47,7 @@ test('correct todolist should be removed', () => {
 test('correct todolist should be added', () => {
 	const newTodoListTitle = 'New TodoList'
 
-	const endState = todolistsSlice(
+	const endState = todoListsReducer(
 		startState,
 		createTodoList({
 			todoList: {
@@ -67,7 +67,7 @@ test('correct todolist should be added', () => {
 test('correct todolist should change its name', () => {
 	const newTodoListTitle = 'New TodoList Title'
 
-	const endState = todolistsSlice(
+	const endState = todoListsReducer(
 		startState,
 		updateTodoListTitle({ todoListId: todolistId2, title: newTodoListTitle })
 	)
@@ -81,7 +81,7 @@ test('correct filter of todolist should be changed', () => {
 
 	const action = changeTodoListFilter({ todoListId: todolistId2, filterValue: newFilter })
 
-	const endState = todolistsSlice(startState, action)
+	const endState = todoListsReducer(startState, action)
 
 	expect(endState[0].filter).toBe('all')
 	expect(endState[1].filter).toBe('completed')

@@ -1,6 +1,6 @@
 import type { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
 import { DomainTodoList, TodoList } from '../api/todolistsApi.types'
-import { todolistsApi } from '../api/todolistsApi'
+import { _todolistsApi } from '../api/todolistsApi'
 import { AppThunk, FullAction } from '../../../app/store'
 import { Dispatch } from 'redux'
 import { RequestStatus, setAppStatus } from '../../../app/appSlice'
@@ -66,7 +66,7 @@ export const todoListsSlice = createSlice({
 	}
 })
 
-export const todolistsSlice = todoListsSlice.reducer
+export const todoListsReducer = todoListsSlice.reducer
 
 export const {
 	setTodoLists,
@@ -82,7 +82,7 @@ export const { selectTodoLists } = todoListsSlice.selectors
 
 export const fetchTodoListsTC = (): AppThunk => (dispatch: Dispatch<FullAction>) => {
 	dispatch(setAppStatus({ status: 'loading' }))
-	todolistsApi
+	_todolistsApi
 		.getTodoLists()
 		.then((res) => {
 			dispatch(setAppStatus({ status: 'succeeded' }))
@@ -99,7 +99,7 @@ export const createTodoListTC =
 		dispatch(setAppStatus({ status: 'loading' }))
 
 		const { title } = args
-		todolistsApi
+		_todolistsApi
 			.createTodoList(title)
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
@@ -121,7 +121,7 @@ export const updateTodoListTC =
 		dispatch(setAppStatus({ status: 'loading' }))
 
 		const { todoListId, title } = args
-		todolistsApi
+		_todolistsApi
 			.updateTodoList({ todoListId, title })
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
@@ -144,7 +144,7 @@ export const removeTodoListTC =
 		dispatch(setAppStatus({ status: 'loading' }))
 		dispatch(changeTodoListEntityStatus({ id, entityStatus: 'loading' }))
 
-		todolistsApi
+		_todolistsApi
 			.removeTodolist(id)
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
