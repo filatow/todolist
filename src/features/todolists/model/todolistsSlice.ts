@@ -1,11 +1,6 @@
 import type { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
-import { DomainTodoList, TodoList } from '../api/todolistsApi.types'
-import { _todolistsApi } from '../api/todolistsApi'
-import { AppThunk, FullAction } from '../../../app/store'
-import { Dispatch } from 'redux'
-import { RequestStatus, setAppStatus } from '../../../app/appSlice'
-import { handleServerAppError, handleServerNetworkError } from 'common/utils'
-import { ResultCode } from '../lib/enums/enums'
+import { DomainTodoList, ServerTodoList } from '../api/todolistsApi.types'
+import { RequestStatus } from '../../../app/appSlice'
 import { createSlice } from '@reduxjs/toolkit'
 import { clearTasksAndTodoLists } from 'common/actions/common.actions'
 
@@ -13,10 +8,10 @@ export const todoListsSlice = createSlice({
 	name: 'todoLists',
 	initialState: [] as DomainTodoList[],
 	reducers: (create) => ({
-		setTodoLists: create.reducer<{ todoLists: TodoList[] }>((_state, action) => {
+		setTodoLists: create.reducer<{ todoLists: ServerTodoList[] }>((_state, action) => {
 			return action.payload.todoLists.map((tl) => ({ ...tl, filter: 'all', entityStatus: 'idle' }))
 		}),
-		createTodoList: create.reducer<{ todoList: TodoList }>((state, action) => {
+		createTodoList: create.reducer<{ todoList: ServerTodoList }>((state, action) => {
 			const newTodoList: DomainTodoList = {
 				...action.payload.todoList,
 				filter: 'all',
@@ -78,8 +73,9 @@ export const {
 	clearTodoLists
 } = todoListsSlice.actions
 
-export const { selectTodoLists } = todoListsSlice.selectors
+// export const { selectTodoLists } = todoListsSlice.selectors
 
+/*
 export const fetchTodoListsTC = (): AppThunk => (dispatch: Dispatch<FullAction>) => {
 	dispatch(setAppStatus({ status: 'loading' }))
 	_todolistsApi
@@ -160,20 +156,20 @@ export const removeTodoListTC =
 				dispatch(changeTodoListEntityStatus({ id, entityStatus: 'failed' }))
 			})
 	}
+*/
+// export type SetTodoListsAction = ReturnType<typeof setTodoLists>
+// export type AddTodoListAction = ReturnType<typeof createTodoList>
+// export type RemoveTodoListAction = ReturnType<typeof removeTodoList>
+// export type ChangeTodoListTitleAction = ReturnType<typeof updateTodoListTitle>
+// export type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilter>
+// export type ChangeTodoListEntityStatusAction = ReturnType<typeof changeTodoListEntityStatus>
+// export type ClearTodoListsAction = ReturnType<typeof clearTodoLists>
 
-export type SetTodoListsAction = ReturnType<typeof setTodoLists>
-export type AddTodoListAction = ReturnType<typeof createTodoList>
-export type RemoveTodoListAction = ReturnType<typeof removeTodoList>
-export type ChangeTodoListTitleAction = ReturnType<typeof updateTodoListTitle>
-export type ChangeTodoListFilterAction = ReturnType<typeof changeTodoListFilter>
-export type ChangeTodoListEntityStatusAction = ReturnType<typeof changeTodoListEntityStatus>
-export type ClearTodoListsAction = ReturnType<typeof clearTodoLists>
-
-export type TodoListsAction =
-	| SetTodoListsAction
-	| AddTodoListAction
-	| RemoveTodoListAction
-	| ChangeTodoListTitleAction
-	| ChangeTodoListFilterAction
-	| ChangeTodoListEntityStatusAction
-	| ClearTodoListsAction
+// export type TodoListsAction =
+// 	| SetTodoListsAction
+// 	| AddTodoListAction
+// 	| RemoveTodoListAction
+// 	| ChangeTodoListTitleAction
+// 	| ChangeTodoListFilterAction
+// 	| ChangeTodoListEntityStatusAction
+// 	| ClearTodoListsAction

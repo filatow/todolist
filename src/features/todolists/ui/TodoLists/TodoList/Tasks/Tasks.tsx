@@ -1,33 +1,31 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Task } from './Task'
 import { List } from '@mui/material'
-import { useAppSelector } from 'common/hooks/useAppSelector'
-import { fetchTasksTC, selectTasks } from '../../../../model/tasksSlice'
-import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { DomainTask } from '../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../lib/enums/enums'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
+import { useGetTasksQuery } from '../../../../api/tasksApi'
 
 type TasksProps = {
 	todoList: DomainTodoList
 }
 
 const Tasks = ({ todoList }: TasksProps) => {
-	const allTasks = useAppSelector(selectTasks)
-	const dispatch = useAppDispatch()
+	// const allTasks = useAppSelector(selectTasks)
+	// const dispatch = useAppDispatch()
+	const { data: tasks = [] } = useGetTasksQuery(todoList.id)
 
-	useEffect(() => {
-		dispatch(fetchTasksTC(todoList.id))
-	}, [])
-
-	const tasks = allTasks[todoList.id]
+	// useEffect(() => {
+	// 	dispatch(fetchTasksTC(todoList.id))
+	// }, [])
+	// const tasks = allTasks[todoList.id]
 
 	const filterMapping: FilterMapping = {
-		active: () => tasks.filter((task) => task.status === TaskStatus.New),
-		completed: () => tasks.filter((task) => task.status === TaskStatus.Completed),
-		all: () => tasks
+		active: (tasks) => tasks.filter((task) => task.status === TaskStatus.New),
+		completed: (tasks) => tasks.filter((task) => task.status === TaskStatus.Completed),
+		all: (tasks) => tasks
 	}
-	const filteredTasks = tasks ? filterMapping[todoList.filter]() : []
+	const filteredTasks = filterMapping[todoList.filter](tasks)
 
 	return filteredTasks.length ?
 			<List>
@@ -40,8 +38,10 @@ const Tasks = ({ todoList }: TasksProps) => {
 
 export default Tasks
 
+type FilterMappingMethod = (tasks: DomainTask[]) => DomainTask[]
+
 type FilterMapping = {
-	active: () => Array<DomainTask>
-	completed: () => Array<DomainTask>
-	all: () => Array<DomainTask>
+	active: FilterMappingMethod
+	completed: FilterMappingMethod
+	all: FilterMappingMethod
 }

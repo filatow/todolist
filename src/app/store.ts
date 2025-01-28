@@ -1,11 +1,6 @@
-import { TasksAction, tasksReducer, tasksSlice } from '../features/todolists/model/tasksSlice'
-import {
-	TodoListsAction,
-	todoListsSlice,
-	todoListsReducer
-} from '../features/todolists/model/todolistsSlice'
-import { AppAction, appReducer, appSlice } from './appSlice'
-import { ThunkAction } from 'redux-thunk'
+import { tasksReducer, tasksSlice } from '../features/todolists/model/tasksSlice'
+import { todoListsReducer, todoListsSlice } from '../features/todolists/model/todolistsSlice'
+import { appReducer, appSlice } from './appSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { todoListsApi } from '../features/todolists/api/todolistsApi'
 import { setupListeners } from '@reduxjs/toolkit/query'
@@ -28,12 +23,12 @@ setupListeners(store.dispatch)
 export type RootState = ReturnType<typeof store.getState>
 
 // типы action для всего приложения
-export type FullAction = AppAction | TodoListsAction | TasksAction
+// export type FullAction = AppAction | TodoListsAction | TasksAction
 
 export type AppDispatch = typeof store.dispatch
 // export type AppDispatch = ThunkDispatch<RootState, unknown, FullAction>
 
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, FullAction>
+// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, FullAction>
 
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore

@@ -33,9 +33,9 @@ export function Header() {
 		dispatch(switchTheme({ theme: themeMode === 'light' ? 'dark' : 'light' }))
 	}
 
-	const handleLogout = () => {
+	const logoutHandler = () => {
 		logout().then((res) => {
-			if (res.data?.resultCode === ResultCode.Success)			{
+			if (res.data?.resultCode === ResultCode.Success) {
 				dispatch(setAppStatus({ status: 'succeeded' }))
 				dispatch(setIsLoggedIn({ isLoggedIn: false }))
 				localStorage.removeItem('sn-token')
@@ -51,7 +51,7 @@ export function Header() {
 					<MenuIcon />
 				</IconButton>
 				<div>
-					{isLoggedIn && <MenuButton onClick={handleLogout}>Logout</MenuButton>}
+					{isLoggedIn && <MenuButton onClick={logoutHandler}>Logout</MenuButton>}
 					<MenuButton background={theme.palette.primary.dark}>Faq</MenuButton>
 					<Switch color={'default'} onChange={switchMode} />
 				</div>

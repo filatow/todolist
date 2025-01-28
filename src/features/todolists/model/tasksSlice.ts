@@ -1,16 +1,6 @@
-import {
-	AddTodoListAction,
-	createTodoList,
-	removeTodoList,
-	RemoveTodoListAction
-} from './todolistsSlice'
-import { AppThunk, FullAction } from '../../../app/store'
-import { tasksApi } from '../api/tasksApi'
-import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from '../api/tasksApi.types'
-import { Dispatch } from 'redux'
-import { RequestStatus, setAppStatus } from '../../../app/appSlice'
-import { ResultCode } from '../lib/enums/enums'
-import { handleServerAppError, handleServerNetworkError } from 'common/utils'
+import { createTodoList, removeTodoList } from './todolistsSlice'
+import { DomainTask } from '../api/tasksApi.types'
+import { RequestStatus } from '../../../app/appSlice'
 import { createSlice } from '@reduxjs/toolkit'
 import { clearTasksAndTodoLists } from 'common/actions/common.actions'
 
@@ -71,13 +61,12 @@ export const tasksSlice = createSlice({
 export const tasksReducer = tasksSlice.reducer
 export const { setTasks, createTask, removeTask, updateTask, changeTaskEntityStatus } =
 	tasksSlice.actions
-export const { selectTasks } = tasksSlice.selectors
-
+/*
 export const fetchTasksTC =
 	(todoListId: string): AppThunk =>
 	(dispatch: Dispatch<FullAction>) => {
 		dispatch(setAppStatus({ status: 'loading' }))
-		tasksApi
+		_tasksApi
 			.getTasks(todoListId)
 			.then((res) => {
 				dispatch(setAppStatus({ status: 'succeeded' }))
@@ -102,7 +91,7 @@ export const removeTaskTC =
 		dispatch(setAppStatus({ status: 'loading' }))
 		dispatch(changeTaskEntityStatus({ todoListId, id, entityStatus: 'loading' }))
 
-		tasksApi
+		_tasksApi
 			.removeTask(args)
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
@@ -124,7 +113,7 @@ export const createTaskTC =
 	(dispatch: Dispatch<FullAction>) => {
 		dispatch(setAppStatus({ status: 'loading' }))
 
-		tasksApi
+		_tasksApi
 			.createTask(args)
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
@@ -160,7 +149,7 @@ export const updateTaskTC =
 			domainModel
 		)
 		dispatch(setAppStatus({ status: 'loading' }))
-		tasksApi
+		_tasksApi
 			.updateTask({ updateTaskData, todoListId, taskId })
 			.then((res) => {
 				if (res.data.resultCode === ResultCode.Success) {
@@ -176,23 +165,24 @@ export const updateTaskTC =
 				handleServerNetworkError(error, dispatch)
 			})
 	}
+*/
 
 export type TasksState = {
 	[key: string]: Array<DomainTask>
 }
 
 // Actions types
-export type SetTaskAction = ReturnType<typeof setTasks>
-export type RemoveTaskAction = ReturnType<typeof removeTask>
-export type AddTaskAction = ReturnType<typeof createTask>
-export type UpdateTaskAction = ReturnType<typeof updateTask>
-export type ChangeTaskEntityStatusAction = ReturnType<typeof changeTaskEntityStatus>
+// export type SetTaskAction = ReturnType<typeof setTasks>
+// export type RemoveTaskAction = ReturnType<typeof removeTask>
+// export type AddTaskAction = ReturnType<typeof createTask>
+// export type UpdateTaskAction = ReturnType<typeof updateTask>
+// export type ChangeTaskEntityStatusAction = ReturnType<typeof changeTaskEntityStatus>
 
-export type TasksAction =
-	| SetTaskAction
-	| RemoveTaskAction
-	| AddTaskAction
-	| UpdateTaskAction
-	| AddTodoListAction
-	| RemoveTodoListAction
-	| ChangeTaskEntityStatusAction
+// export type TasksAction =
+// 	| SetTaskAction
+// 	| RemoveTaskAction
+// 	| AddTaskAction
+// 	| UpdateTaskAction
+// 	| AddTodoListAction
+// 	| RemoveTodoListAction
+// 	| ChangeTaskEntityStatusAction
