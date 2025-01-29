@@ -1,4 +1,4 @@
-import { FilterValuesType } from '../ui/TodoLists/TodoList/TodoList'
+import { FilterValue } from '../ui/TodoLists/TodoList/TodoList'
 import { RequestStatus } from '../../../app/appSlice'
 
 export type ServerTodoList = {
@@ -9,6 +9,6 @@ export type ServerTodoList = {
 }
 
 export type DomainTodoList = ServerTodoList & {
-	filter: FilterValuesType
+	filter: FilterValue
 	entityStatus: RequestStatus
 }

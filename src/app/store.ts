@@ -1,5 +1,3 @@
-import { tasksReducer, tasksSlice } from '../features/todolists/model/tasksSlice'
-import { todoListsReducer, todoListsSlice } from '../features/todolists/model/todolistsSlice'
 import { appReducer, appSlice } from './appSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { todoListsApi } from '../features/todolists/api/todolistsApi'
@@ -10,8 +8,8 @@ import { baseApi } from './baseApi'
 export const store = configureStore({
 	reducer: {
 		[appSlice.name]: appReducer,
-		[todoListsSlice.name]: todoListsReducer,
-		[tasksSlice.name]: tasksReducer,
+		// [todoListsSlice.name]: todoListsReducer,
+		// [tasksSlice.name]: tasksReducer,
 		[baseApi.reducerPath]: todoListsApi.reducer
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(todoListsApi.middleware)

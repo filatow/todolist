@@ -24,6 +24,10 @@ const Main = () => {
 		}
 	}, [isLoggedIn, navigate])
 
+	if (!isLoggedIn) {
+		return null
+	}
+
 	return (
 		<Container fixed>
 			<Grid container sx={{ p: '20px 15px' }}>

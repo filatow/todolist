@@ -4,9 +4,12 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
 import {
+	todoListsApi,
 	useRemoveTodoListMutation,
 	useUpdateTodoListTitleMutation
 } from '../../../../api/todolistsApi'
+import { useAppDispatch } from 'common/hooks'
+import { RequestStatus } from '../../../../../../app/appSlice'
 
 type TodoListTitleProps = {
 	todoList: DomainTodoList
@@ -14,15 +17,33 @@ type TodoListTitleProps = {
 }
 
 const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
+	const {id: todoListId, entityStatus} = todoList
+	const dispatch = useAppDispatch()
 	const [removeTodoList] = useRemoveTodoListMutation()
 	const [updateTodoListTitle] = useUpdateTodoListTitleMutation()
 
+	const setTodoListEntityStatus = (status: RequestStatus) => {
+		dispatch(
+			todoListsApi.util.updateQueryData('getTodoLists', undefined, (todoLists) => {
+				const todoList = todoLists.find(tl => tl.id === todoListId)
+				if (todoList) {
+					todoList.entityStatus = status
+				}
+			})
+		)
+	}
+
 	const updateTodoListTitleCallback = (title: string) => {
-		updateTodoListTitle({ title, id: todoList.id })
+		updateTodoListTitle({ title, id: todoListId })
 	}
 
 	const removeTodoListCallback = () => {
-		removeTodoList(todoList.id)
+		setTodoListEntityStatus('loading')
+		removeTodoList(todoListId)
+			.unwrap()
+			.catch(() => {
+				setTodoListEntityStatus('failed')
+			})
 	}
 
 	return (
@@ -30,9 +51,9 @@ const TodoListTitle = ({ todoList, title }: TodoListTitleProps) => {
 			<EditableSpan
 				caption={title}
 				onChange={updateTodoListTitleCallback}
-				disabled={todoList.entityStatus === 'loading'}
+				disabled={entityStatus === 'loading'}
 			/>
-			<IconButton onClick={removeTodoListCallback} disabled={todoList.entityStatus === 'loading'}>
+			<IconButton onClick={removeTodoListCallback} disabled={entityStatus === 'loading'}>
 				<DeleteIcon />
 			</IconButton>
 		</h3>

@@ -1,58 +1,48 @@
 import React from 'react'
 import Button from '@mui/material/Button'
-import { changeTodoListFilter } from '../../../../model/todolistsSlice'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
+import { FilterValue } from '../TodoList'
+import { todoListsApi } from '../../../../api/todolistsApi'
 
 const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
+	const {filter, id} = todoList
 	const dispatch = useAppDispatch()
 
-	const onClickAllHandler = () => {
+	const changeFilterTasks = (filter: FilterValue) => {
 		dispatch(
-			changeTodoListFilter({
-				todoListId: todoList.id,
-				filterValue: 'all'
+			todoListsApi.util.updateQueryData('getTodoLists', undefined, (todoLists: DomainTodoList[]) => {
+				const todoList = todoLists.find((tl) => tl.id === id)
+				if (todoList) {
+					todoList.filter = filter
+				}
 			})
 		)
 	}
 
-	const onClickActiveHandler = () => {
-		dispatch(
-			changeTodoListFilter({
-				todoListId: todoList.id,
-				filterValue: 'active'
-			})
-		)
-	}
-
-	const onClickCompletedHandler = () => {
-		dispatch(
-			changeTodoListFilter({
-				todoListId: todoList.id,
-				filterValue: 'completed'
-			})
-		)
-	}
+	const onClickAllHandler = () => changeFilterTasks('all')
+	const onClickActiveHandler = () => changeFilterTasks('active')
+	const onClickCompletedHandler = () => changeFilterTasks('completed')
 
 	return (
 		<div>
 			<Button
 				onClick={onClickAllHandler}
-				variant={todoList.filter === 'all' ? 'contained' : 'outlined'}
+				variant={filter === 'all' ? 'contained' : 'outlined'}
 				color={'inherit'}
 			>
 				All
 			</Button>
 			<Button
 				onClick={onClickActiveHandler}
-				variant={todoList.filter === 'active' ? 'contained' : 'outlined'}
+				variant={filter === 'active' ? 'contained' : 'outlined'}
 				color={'primary'}
 			>
 				Active
 			</Button>
 			<Button
 				onClick={onClickCompletedHandler}
-				variant={todoList.filter === 'completed' ? 'contained' : 'outlined'}
+				variant={filter === 'completed' ? 'contained' : 'outlined'}
 				color={'secondary'}
 			>
 				Completed

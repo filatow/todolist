@@ -12,8 +12,8 @@ export const Path = {
 export const Routing = () => {
 	return (
 		<Routes>
-			<Route path={Path.Main} element={<Main />} />
 			<Route path={Path.Login} element={<Login />} />
+			<Route path={Path.Main} element={<Main />} />
 			<Route path={Path.NotFound} element={<Page404 />} />
 		</Routes>
 	)

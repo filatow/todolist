@@ -9,16 +9,17 @@ import Switch from '@mui/material/Switch'
 import { useTheme } from '@mui/material'
 import {
 	selectAppStatus,
-	selectTheme,
-	switchTheme,
 	selectIsLoggedIn,
+	selectTheme,
 	setAppStatus,
-	setIsLoggedIn
+	setIsLoggedIn,
+	switchTheme
 } from '../../../app/appSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { useLogoutMutation } from '../../../features/auth/api/authApi'
 import { ResultCode } from '../../../features/todolists/lib/enums/enums'
-import { clearTasksAndTodoLists } from 'common/actions/common.actions'
+// import { clearTasksAndTodoLists } from 'common/actions/common.actions'
+import { baseApi } from '../../../app/baseApi'
 
 export function Header() {
 	const dispatch = useAppDispatch()
@@ -34,14 +35,17 @@ export function Header() {
 	}
 
 	const logoutHandler = () => {
-		logout().then((res) => {
-			if (res.data?.resultCode === ResultCode.Success) {
-				dispatch(setAppStatus({ status: 'succeeded' }))
-				dispatch(setIsLoggedIn({ isLoggedIn: false }))
-				localStorage.removeItem('sn-token')
-				dispatch(clearTasksAndTodoLists({ todoLists: [], tasks: {} }))
-			}
-		})
+		logout()
+			.then((res) => {
+				if (res.data?.resultCode === ResultCode.Success) {
+					dispatch(setAppStatus({ status: 'succeeded' }))
+					dispatch(setIsLoggedIn({ isLoggedIn: false }))
+					localStorage.removeItem('sn-token')
+				}
+			})
+			.then(() => {
+				dispatch(baseApi.util.resetApiState())
+			})
 	}
 
 	return (

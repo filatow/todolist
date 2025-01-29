@@ -5,20 +5,19 @@ import { DomainTask } from '../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../lib/enums/enums'
 import { DomainTodoList } from '../../../../api/todolistsApi.types'
 import { useGetTasksQuery } from '../../../../api/tasksApi'
+import { TasksSkeleton } from '../../../skeletons/TasksSkeleton'
+import { FilterValue } from '../TodoList'
 
 type TasksProps = {
 	todoList: DomainTodoList
 }
 
 const Tasks = ({ todoList }: TasksProps) => {
-	// const allTasks = useAppSelector(selectTasks)
-	// const dispatch = useAppDispatch()
-	const { data: tasks = [] } = useGetTasksQuery(todoList.id)
+	const { data: tasks = [], isLoading  } = useGetTasksQuery(todoList.id)
 
-	// useEffect(() => {
-	// 	dispatch(fetchTasksTC(todoList.id))
-	// }, [])
-	// const tasks = allTasks[todoList.id]
+	if (isLoading) {
+		return <TasksSkeleton />
+	}
 
 	const filterMapping: FilterMapping = {
 		active: (tasks) => tasks.filter((task) => task.status === TaskStatus.New),
@@ -38,10 +37,5 @@ const Tasks = ({ todoList }: TasksProps) => {
 
 export default Tasks
 
-type FilterMappingMethod = (tasks: DomainTask[]) => DomainTask[]
-
-type FilterMapping = {
-	active: FilterMappingMethod
-	completed: FilterMappingMethod
-	all: FilterMappingMethod
-}
+type FilterMethod = (tasks: DomainTask[]) => DomainTask[]
+type FilterMapping = Record<FilterValue, FilterMethod>
