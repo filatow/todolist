@@ -14,10 +14,10 @@ import s from './Login.module.css'
 import { useAppDispatch } from 'common/hooks'
 import { useNavigate } from 'react-router'
 import { useEffect } from 'react'
-import { Path } from 'common/routing/Routing'
 import { LoginArgs } from '../../api/authApi.types'
 import { useLoginMutation } from 'features/auth/api/authApi'
 import { ResultCode } from '../../../todolists/lib/enums/enums'
+import { Path } from 'common/utils/types/path'
 
 export const Login = () => {
 	const dispatch = useAppDispatch()

@@ -1,8 +1,8 @@
 import s from './Page404.module.css'
 import Button from '@mui/material/Button'
-import { Path } from 'common/routing/Routing'
 import { Link } from 'react-router'
 import Grid from '@mui/material/Grid'
+import { Path } from 'common/utils/types/path'
 
 export const Page404 = () => {
 	return (

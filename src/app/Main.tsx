@@ -5,9 +5,9 @@ import { AddItemForm } from 'common/components'
 import TodoLists from '../features/todolists/ui/TodoLists/TodoLists'
 import { useAppSelector } from 'common/hooks'
 import { useNavigate } from 'react-router'
-import { Path } from 'common/routing/Routing'
 import { useAddTodoListMutation } from '../features/todolists/api/todolistsApi'
 import { selectIsLoggedIn } from './appSlice'
+import { Path } from 'common/utils/types/path'
 
 const Main = () => {
 	const [addTodoList] = useAddTodoListMutation()

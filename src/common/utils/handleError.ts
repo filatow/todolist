@@ -7,6 +7,8 @@ import {
 	QueryReturnValue
 } from '@reduxjs/toolkit/query'
 
+import { Path } from 'common/utils/types/path'
+
 function isErrorWithMessage(error: unknown): error is { message: string } {
 	return (
 		typeof error === 'object' &&
@@ -50,13 +52,17 @@ export const handleError = (
 		}
 		api.dispatch(setAppError({ error }))
 	}
+
 	// 2. Result code errors
-	if ((result.data as { resultCode: ResultCode }).resultCode === ResultCode.Error) {
+	if (
+		(result.data as { resultCode: ResultCode }).resultCode === ResultCode.Error &&
+		window.location.pathname !== Path.Login
+	) {
+		console.log('ResultCode.Error')
+		console.log({windowLocation: window.location})
 		const messages = (result.data as { messages: string[] }).messages
 		error = messages.length ? messages[0] : error
-		console.log('ResultCode.Error')
-		console.log(result)
+
 		api.dispatch(setAppError({ error }))
 	}
-
 }
