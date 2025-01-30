@@ -1,6 +1,7 @@
-import { DomainTodoList, ServerTodoList } from './todolistsApi.types'
+
 import { BaseResponse } from 'common/types/types'
 import { baseApi } from '../../../app/baseApi'
+import { DomainTodoList, ServerTodoList } from '../lib/types/types'
 
 export const todoListsApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({

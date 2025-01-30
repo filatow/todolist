@@ -8,8 +8,6 @@ import { baseApi } from './baseApi'
 export const store = configureStore({
 	reducer: {
 		[appSlice.name]: appReducer,
-		// [todoListsSlice.name]: todoListsReducer,
-		// [tasksSlice.name]: tasksReducer,
 		[baseApi.reducerPath]: todoListsApi.reducer
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(todoListsApi.middleware)
@@ -20,13 +18,7 @@ setupListeners(store.dispatch)
 // определить автоматически тип всего объекта состояния
 export type RootState = ReturnType<typeof store.getState>
 
-// типы action для всего приложения
-// export type FullAction = AppAction | TodoListsAction | TasksAction
-
 export type AppDispatch = typeof store.dispatch
-// export type AppDispatch = ThunkDispatch<RootState, unknown, FullAction>
-
-// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, FullAction>
 
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore

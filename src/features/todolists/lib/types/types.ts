@@ -1,5 +1,6 @@
-import { FilterValue } from '../ui/TodoLists/TodoList/TodoList'
-import { RequestStatus } from '../../../app/appSlice'
+import { RequestStatus } from '../../../../app/appSlice'
+
+export type FilterValue = 'all' | 'active' | 'completed'
 
 export type ServerTodoList = {
 	id: string

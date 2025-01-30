@@ -1,9 +1,8 @@
 import React from 'react'
 import Button from '@mui/material/Button'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
-import { DomainTodoList } from '../../../../api/todolistsApi.types'
-import { FilterValue } from '../TodoList'
 import { todoListsApi } from '../../../../api/todolistsApi'
+import { DomainTodoList, FilterValue } from '../../../../lib/types/types'
 
 const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 	const {filter, id} = todoList

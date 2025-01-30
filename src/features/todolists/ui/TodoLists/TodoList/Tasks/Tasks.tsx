@@ -3,10 +3,10 @@ import { Task } from './Task'
 import { List } from '@mui/material'
 import { DomainTask } from '../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../lib/enums/enums'
-import { DomainTodoList } from '../../../../api/todolistsApi.types'
 import { useGetTasksQuery } from '../../../../api/tasksApi'
 import { TasksSkeleton } from '../../../skeletons/TasksSkeleton'
-import { FilterValue } from '../TodoList'
+
+import { DomainTodoList, FilterValue } from '../../../../lib/types/types'
 
 type TasksProps = {
 	todoList: DomainTodoList

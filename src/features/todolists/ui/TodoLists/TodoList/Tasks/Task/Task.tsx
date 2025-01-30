@@ -11,11 +11,10 @@ import {
 	UpdateTaskModel
 } from '../../../../../api/tasksApi.types'
 import { TaskStatus } from '../../../../../lib/enums/enums'
-import { DomainTodoList } from '../../../../../api/todolistsApi.types'
 import { useRemoveTaskMutation, useUpdateTaskMutation } from '../../../../../api/tasksApi'
+import { DomainTodoList } from '../../../../../lib/types/types'
 
 export const Task = ({ todoList, task }: TaskProps) => {
-	// const dispatch = useAppDispatch()
 	const [removeTask] = useRemoveTaskMutation()
 	const [updateTask] = useUpdateTaskMutation()
 
@@ -43,16 +42,13 @@ export const Task = ({ todoList, task }: TaskProps) => {
 	const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
 		const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
 
-		// dispatch(updateTaskTC({ task, domainModel: { status } }))
 		updateTaskWith({ status })
 	}
 	const changeTaskTitle = (title: string) => {
-		// dispatch(updateTaskTC({ task, domainModel: { title } }))
 		updateTaskWith({ title })
 	}
 
 	const removeTaskCallback = () => {
-		// dispatch(removeTaskTC({ todoListId: todoList.id, taskId: task.id }))
 		removeTask({ todoListId: todoList.id, taskId: task.id })
 	}
 
