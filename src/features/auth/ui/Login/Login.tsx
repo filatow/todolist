@@ -18,7 +18,6 @@ import { LoginArgs } from '../../api/authApi.types'
 import { useLoginMutation } from 'features/auth/api/authApi'
 import { ResultCode } from '../../../todolists/lib/enums/enums'
 import { Path } from 'common/utils/types/path'
-import * as process from 'node:process'
 
 export const Login = () => {
 	const dispatch = useAppDispatch()
