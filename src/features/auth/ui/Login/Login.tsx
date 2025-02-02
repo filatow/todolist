@@ -18,6 +18,7 @@ import { LoginArgs } from '../../api/authApi.types'
 import { useLoginMutation } from 'features/auth/api/authApi'
 import { ResultCode } from '../../../todolists/lib/enums/enums'
 import { Path } from 'common/utils/types/path'
+import * as process from 'node:process'
 
 export const Login = () => {
 	const dispatch = useAppDispatch()
@@ -36,9 +37,9 @@ export const Login = () => {
 		formState: { errors }
 	} = useForm<LoginArgs>({
 		defaultValues: {
-			email: 'not-found@inbox.ru',
+			email: process.env.ITI_API_EMAIL,
 			// email: 'free@samuraijs.com',
-			password: 'getS0me@pi',
+			password: process.env.ITI_API_PASSWORD,
 			// password: 'free',
 			rememberMe: false
 		}
