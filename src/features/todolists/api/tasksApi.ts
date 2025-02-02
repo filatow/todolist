@@ -1,17 +1,35 @@
 import { DomainTask, GetTasksResponse, ServerTask, UpdateTaskModel } from './tasksApi.types'
-import { instance } from 'common/instance/instance'
 import { BaseResponse } from 'common/types/types'
 import { baseApi } from '../../../app/baseApi'
 
+export const PAGE_SIZE = 4
+
 export const tasksApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getTasks: builder.query<DomainTask[], string>({
-			query: (todolistId) => `todo-lists/${todolistId}/tasks`,
-			transformResponse(data: GetTasksResponse) {
-				const tasks = data?.items || []
-				return tasks.map((t) => ({ ...t, entityStatus: 'idle' }))
+		getTasks: builder.query<
+			GetTasksResponse<DomainTask>,
+			{ todoListId: string; args: { count?: number; page: number } }
+		>({
+			query: ({ todoListId, args }) => {
+				return {
+					url: `todo-lists/${todoListId}/tasks`,
+					params: { count: PAGE_SIZE, ...args }
+				}
 			},
-			providesTags: ['Task']
+			transformResponse(data: GetTasksResponse) {
+				return {
+					...data,
+					items: data.items.map((t) => ({ ...t, entityStatus: 'idle' }))
+				}
+			},
+			providesTags: (_res, _error, { todoListId }) =>
+				// res ?
+				// 	[
+				// 		...res.map(({ id }) => ({ type: 'Task', id }) as const),
+				// 		{ type: 'Task', id: todolistId }
+				// 	]
+				// :	['Task']
+				[{ type: 'Task', id: todoListId }]
 		}),
 		createTask: builder.mutation<
 			BaseResponse<{ item: ServerTask }>,
@@ -22,14 +40,15 @@ export const tasksApi = baseApi.injectEndpoints({
 				url: `todo-lists/${todoListId}/tasks`,
 				body: { title }
 			}),
-			invalidatesTags: ['Task']
+			invalidatesTags: (_res, _error, { todoListId }) => [{ type: 'Task', id: todoListId }]
 		}),
 		removeTask: builder.mutation<BaseResponse, { todoListId: string; taskId: string }>({
 			query: ({ todoListId, taskId }) => ({
 				url: `todo-lists/${todoListId}/tasks/${taskId}`,
 				method: 'DELETE'
 			}),
-			invalidatesTags: ['Task']
+			invalidatesTags: (_res, _err, { todoListId }) =>
+				[{ type: 'Task', id: todoListId }]
 		}),
 		updateTask: builder.mutation<
 			BaseResponse<{ item: ServerTask }>,
@@ -40,7 +59,43 @@ export const tasksApi = baseApi.injectEndpoints({
 				method: 'PUT',
 				body: updateTaskData
 			}),
-			invalidatesTags: ['Task']
+			onQueryStarted: async (
+				{ todoListId, taskId, updateTaskData },
+				{ dispatch, queryFulfilled, getState }
+			) => {
+				const cachedArgsForQuery = tasksApi.util.selectCachedArgsForQuery(getState(), 'getTasks')
+
+				const patchResults: any[] = []
+
+				cachedArgsForQuery.forEach(({ args }) => {
+					patchResults.push(
+						dispatch(
+							tasksApi.util.updateQueryData(
+								'getTasks',
+								{
+									todoListId,
+									args: { page: args.page }
+								},
+								(state) => {
+									const task = state.items.find((t) => t.id === taskId)
+									if (task) {
+										task.status = updateTaskData.status
+									}
+								}
+							)
+						)
+					)
+				})
+				try {
+					await queryFulfilled
+				} catch {
+					patchResults.forEach((patchResult) => {
+						patchResult.undo()
+					})
+				}
+			},
+			invalidatesTags: (_res, _err, { todoListId }) =>
+				[{ type: 'Task', id: todoListId }]
 		})
 	})
 })
@@ -51,26 +106,3 @@ export const {
 	useRemoveTaskMutation,
 	useUpdateTaskMutation
 } = tasksApi
-
-export const _tasksApi = {
-	getTasks(todolistId: string) {
-		return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
-	},
-	createTask(args: { todoListId: string; title: string }) {
-		const { todoListId, title } = args
-		return instance.post<BaseResponse<{ item: ServerTask }>>(`todo-lists/${todoListId}/tasks`, {
-			title
-		})
-	},
-	removeTask(args: { todoListId: string; taskId: string }) {
-		const { todoListId, taskId } = args
-		return instance.delete<BaseResponse>(`todo-lists/${todoListId}/tasks/${taskId}`)
-	},
-	updateTask(args: { updateTaskData: UpdateTaskModel; todoListId: string; taskId: string }) {
-		const { updateTaskData, todoListId, taskId } = args
-		return instance.put<BaseResponse<{ item: ServerTask }>>(
-			`todo-lists/${todoListId}/tasks/${taskId}`,
-			updateTaskData
-		)
-	}
-}

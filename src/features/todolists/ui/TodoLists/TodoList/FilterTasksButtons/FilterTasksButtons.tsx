@@ -3,6 +3,7 @@ import Button from '@mui/material/Button'
 import { useAppDispatch } from 'common/hooks/useAppDispatch'
 import { todoListsApi } from '../../../../api/todolistsApi'
 import { DomainTodoList, FilterValue } from '../../../../lib/types/types'
+import s from './FilterTasksButtons.module.css'
 
 const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 	const {filter, id} = todoList
@@ -29,6 +30,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 				onClick={onClickAllHandler}
 				variant={filter === 'all' ? 'contained' : 'outlined'}
 				color={'inherit'}
+				className={s.filterButton}
 			>
 				All
 			</Button>
@@ -36,6 +38,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 				onClick={onClickActiveHandler}
 				variant={filter === 'active' ? 'contained' : 'outlined'}
 				color={'primary'}
+				className={s.filterButton}
 			>
 				Active
 			</Button>
@@ -43,6 +46,7 @@ const FilterTasksButtons = ({ todoList }: FilterTasksButtonsProps) => {
 				onClick={onClickCompletedHandler}
 				variant={filter === 'completed' ? 'contained' : 'outlined'}
 				color={'secondary'}
+				className={s.filterButton}
 			>
 				Completed
 			</Button>

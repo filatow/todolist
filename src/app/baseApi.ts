@@ -19,5 +19,6 @@ export const baseApi = createApi({
 		return result
 	},
 	endpoints: () => ({}),
-	tagTypes: ['TodoList', 'Task']
+	tagTypes: ['TodoList', 'Task'],
+	refetchOnFocus: true,
 })

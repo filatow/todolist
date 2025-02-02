@@ -18,7 +18,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { useLogoutMutation } from '../../../features/auth/api/authApi'
 import { ResultCode } from '../../../features/todolists/lib/enums/enums'
-// import { clearTasksAndTodoLists } from 'common/actions/common.actions'
 import { baseApi } from '../../../app/baseApi'
 
 export function Header() {

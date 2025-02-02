@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField'
 
 type EditableSpanProps = {
 	caption: string
-	// onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 	onChange: (title: string) => void
 	disabled?: boolean
 }

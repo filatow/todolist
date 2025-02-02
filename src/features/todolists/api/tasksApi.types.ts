@@ -1,9 +1,9 @@
 import { TaskPriority, TaskStatus } from '../lib/enums/enums'
 import { RequestStatus } from '../../../app/appSlice'
 
-export type GetTasksResponse = {
+export type GetTasksResponse <Item = ServerTask> = {
 	error: string | null
-	items: ServerTask[]
+	items: Item[]
 	totalCount: number
 }
 

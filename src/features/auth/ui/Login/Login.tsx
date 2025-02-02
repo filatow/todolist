@@ -36,8 +36,10 @@ export const Login = () => {
 		formState: { errors }
 	} = useForm<LoginArgs>({
 		defaultValues: {
-			email: 'free@samuraijs.com',
-			password: 'free',
+			email: 'not-found@inbox.ru',
+			// email: 'free@samuraijs.com',
+			password: 'getS0me@pi',
+			// password: 'free',
 			rememberMe: false
 		}
 	})

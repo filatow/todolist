@@ -10,7 +10,7 @@ export const todoListsApi = baseApi.injectEndpoints({
 			transformResponse(todoLists: ServerTodoList[]): DomainTodoList[] {
 				return todoLists.map((tl) => ({ ...tl, filter: 'all', entityStatus: 'idle' }))
 			},
-			providesTags: ['TodoList']
+			providesTags: ['TodoList'],
 		}),
 		addTodoList: builder.mutation<BaseResponse<{ item: ServerTodoList }>, string>({
 			query: (title) => {
@@ -27,6 +27,21 @@ export const todoListsApi = baseApi.injectEndpoints({
 				return {
 					url: `todo-lists/${id}`,
 					method: 'DELETE'
+				}
+			},
+			onQueryStarted: async (id: string, { dispatch, queryFulfilled }) => {
+				const patchResult = dispatch(
+					todoListsApi.util.updateQueryData('getTodoLists', undefined, state => {
+						const index = state.findIndex(tl => tl.id === id)
+						if (index !== -1) {
+							state.splice(index, 1)
+						}
+					})
+				)
+				try {
+					await queryFulfilled
+				} catch {
+					patchResult.undo()
 				}
 			},
 			invalidatesTags: ['TodoList']
